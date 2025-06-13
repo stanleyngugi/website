@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stanley - AI Researcher</title>
+    <!-- Tailwind CSS CDN for easy styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter for a modern, clean look -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <style>
+        /* Custom CSS to ensure Inter font is applied globally and for smooth scrolling */
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+            /* Intelligent choice: Add scroll-padding-top to prevent content from hiding behind sticky header */
+            scroll-padding-top: 5rem; /* Adjust based on actual header height */
+        }
+        /* Basic styling for section headings */
+        .section-heading {
+            position: relative;
+            display: inline-block;
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem;
+            /* Ensure children can be positioned relative to this */
+        }
+        .section-heading::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50%; /* Initial width */
+            height: 4px;
+            background-color: #6366f1; /* Indigo-500 */
+            border-radius: 9999px; /* Fully rounded */
+            transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out; /* Smooth transition */
+        }
+        .section-heading:hover::after {
+            width: 100%; /* Expand width on hover */
+            background-color: #4f46e5; /* Deeper indigo on hover */
+        }
+
+        /* Style for active navigation link */
+        .nav-link.active {
+            background-color: #e0e7ff; /* Indigo-100 */
+            color: #4338ca; /* Indigo-700 */
+            font-weight: 600; /* Semi-bold */
+        }
+
+        /* Hero section dynamic background effect */
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Enhanced gradient for eye-catching effect */
+            background: radial-gradient(circle at 80% 20%, rgba(139,92,246,0.3) 0%, transparent 50%),
+                        radial-gradient(circle at 20% 80%, rgba(99,102,241,0.3) 0%, transparent 50%),
+                        radial-gradient(circle at 50% 50%, rgba(167,139,250,0.1) 0%, transparent 70%); /* New subtle gradient */
+            background-size: 200% 200%, 200% 200%, 150% 150%; /* Adjust sizes */
+            animation: moveGradient 20s ease infinite alternate; /* Slightly slower animation */
+            z-index: -1; /* Ensure it stays behind content */
+            opacity: 0.8; /* Subtle transparency */
+        }
+
+        @keyframes moveGradient {
+            0% { background-position: 0% 0%, 100% 100%, 50% 50%; }
+            100% { background-position: 100% 100%, 0% 0%, 20% 80%; }
+        }
+
+        /* Accessibility: Reduce motion for those who prefer it */
+        @media (prefers-reduced-motion) {
+            .hero-background {
+                animation: none;
+                background-size: cover;
+                background-position: center;
+            }
+            .section-heading::after {
+                transition: none; /* Disable transition */
+            }
+        }
+
+        /* For card hover icons, ensure they are positioned relative to the card */
+        .card-icon-container {
+            position: absolute;
+            top: 1.5rem; /* Equivalent to p-6 top */
+            right: 1.5rem; /* Equivalent to p-6 right */
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        /* Use group-hover utility for parent group */
+        .group:hover .card-icon-container {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Header Section: Navigation Bar -->
+    <header class="bg-white shadow-md py-4 sticky top-0 z-50">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-32 flex justify-between items-center">
+            <!-- Logo/Site Title -->
+            <a href="#" class="text-2xl font-bold text-indigo-700 rounded-lg px-3 py-2 transition duration-300 hover:bg-indigo-50 hover:text-indigo-800">
+                Stanley
+            </a>
+            <!-- Navigation Links -->
+            <div class="hidden md:flex space-x-6">
+                <a href="#about" class="nav-link text-gray-600 hover:text-indigo-700 font-medium transition duration-300 px-3 py-2 rounded-lg hover:bg-gray-100">About</a>
+                <a href="#research" class="nav-link text-gray-600 hover:text-indigo-700 font-medium transition duration-300 px-3 py-2 rounded-lg hover:bg-gray-100">Research</a>
+                <a href="#publications" class="nav-link text-gray-600 hover:text-indigo-700 font-medium transition duration-300 px-3 py-2 rounded-lg hover:bg-gray-100">Publications</a>
+                <a href="#insights-frameworks" class="nav-link text-gray-600 hover:text-indigo-700 font-medium transition duration-300 px-3 py-2 rounded-lg hover:bg-gray-100">Insights</a>
+                <!-- Blog link updated to scroll to the #blog section on this page -->
+                <a href="#blog" class="nav-link text-gray-600 hover:text-indigo-700 font-medium transition duration-300 px-3 py-2 rounded-lg hover:bg-gray-100">Blog</a>
+                <a href="#contact" class="nav-link text-gray-600 hover:text-indigo-700 font-medium transition duration-300 px-3 py-2 rounded-lg hover:bg-gray-100">Contact</a>
+            </div>
+            <!-- Mobile Menu Button (Hamburger Icon) -->
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-gray-600 focus:outline-none focus:text-indigo-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white mt-2 px-4 py-2 space-y-2 border-t border-gray-200">
+            <a href="#about" class="nav-link block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">About</a>
+            <a href="#research" class="nav-link block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">Research</a>
+            <a href="#publications" class="nav-link block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">Publications</a>
+            <a href="#insights-frameworks" class="nav-link block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">Insights</a>
+            <!-- Blog link updated to scroll to the #blog section on this page -->
+            <a href="#blog" class="nav-link block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">Blog</a>
+            <a href="#contact" class="nav-link block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">Contact</a>
+        </div>
+    </header>
+
+    <!-- Hero Section: Welcoming Banner -->
+    <section class="relative bg-gradient-to-r from-indigo-600 to-purple-700 text-white py-20 md:py-32 lg:py-40 xl:py-52 rounded-b-3xl shadow-xl flex items-center justify-center text-center overflow-hidden">
+        <div class="hero-background"></div> <!-- Dynamic background -->
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-32 relative z-10">
+            <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-6 animate-fade-in-down">
+                Advancing the Frontiers of Artificial Intelligence
+            </h1>
+            <p class="text-lg md:text-xl mb-8 opacity-90 max-w-3xl mx-auto animate-fade-in-up">
+                My research pioneers beyond conventional paradigms, delving into the fundamental nature of intelligence and understanding. I explore the intricate intersections of machine learning, philosophy, and human cognition to build truly insightful and impactful systems for a profoundly advanced future.
+            </p>
+            <a href="#research" class="bg-white text-indigo-700 px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:bg-indigo-50 transition duration-300 transform hover:scale-105 animate-pop-in">
+                Explore My Research
+            </a>
+        </div>
+    </section>
+
+    <!-- About Section: Introduction to the Researcher -->
+    <section id="about" class="py-16 md:py-24 lg:py-32 xl:py-40 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-32 flex flex-col items-center justify-between">
+            <div class="md:w-full mb-10 md:mb-0 text-center">
+                <h2 class="text-4xl font-bold text-gray-800 mb-6 section-heading mx-auto">About Me: Decoding Reality, Building the Future</h2>
+                <div class="text-lg leading-relaxed text-gray-700 max-w-prose mx-auto">
+                    <p class="mb-4">
+                        I am a deep, integrative thinker at the intersection of technology, philosophy, and human experience. My work is driven by an insatiable curiosity about the underlying principles that govern our reality, and how we can better understand and build within it. I believe that true insight emerges not from confined specializations, but from connecting seemingly disparate fields – from physics to spirituality, neuroscience to mathematics, biology to AI research – seeing them as different languages describing the same fundamental truth.
+                    </p>
+                    <div id="more-about-text" class="hidden">
+                        <p class="mb-4">
+                            My passion for Artificial Intelligence goes beyond surface-level application. I'm fascinated by the very nature of intelligence itself, exploring how machines can develop genuine understanding, how uncertainty fuels creativity, and how we can design AI that truly augments human cognition. I'm particularly drawn to pushing the boundaries, questioning concepts like fixed weights and exploring the potential for non-linguistic thought in AI, believing that machines don't need to be conscious to engage in profound inquiry. This deep understanding of uncertainty is crucial, especially when designing AI for high-risk applications where knowing when a system is unsure is paramount.
+                        </p>
+                        <p class="mb-4">
+                            I am a self-directed explorer and a proactive problem-solver. My learning journey is characterized by diving deep into concepts. I thrive on identifying and dismantling hidden complexities, whether it's understanding the nuances of an AI framework or navigating the new bottleneck of human comprehension in an age of infinite digital content. I firmly believe that in a world of abundant information, the most valuable skill is the courage to question everything.
+                        </p>
+                        <p>
+                            Ultimately, I am building towards a future where technology is deeply understood, ethically developed, and harmoniously integrated with our most fundamental human capacities, including the rich power of our common senses. I offer a unique blend of philosophical depth, technical acumen, and an unwavering commitment to pushing the boundaries of what's possible, always seeking to learn, create, and explore "what is it like" beyond the known.
+                        </p>
+                    </div>
+                    <button id="toggle-about-me" class="mt-4 bg-indigo-500 text-white px-6 py-2 rounded-full text-base font-semibold shadow-md hover:bg-indigo-600 transition duration-300">
+                        Read More
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Research Section: Key Research Areas -->
+    <section id="research" class="py-16 md:py-24 lg:py-32 xl:py-40 bg-gray-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-32">
+            <h2 class="text-4xl font-bold text-gray-800 text-center mb-12 section-heading mx-auto">Key Research Areas</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-8">
+                <!-- Research Area 1: Mechanistic Interpretability & Targeted Model Control -->
+                <div class="group relative bg-gradient-to-br from-white to-gray-50 p-8 rounded-xl shadow-lg border border-gray-200 hover:shadow-2xl hover:border-indigo-500 transition duration-300 transform hover:scale-[1.02]">
+                    <div class="card-icon-container text-indigo-600 text-2xl">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-3">Mechanistic Interpretability & Targeted Model Control</h3>
+                    <p class="text-gray-700 leading-relaxed mb-4">
+                        I pioneer methods to deeply understand large AI models, identifying neural circuits responsible for specific knowledge or behaviors. Leveraging these insights, I design surgical interventions to precisely modify or enhance model capabilities for unparalleled control.
+                    </p>
+                </div>
+
+                <!-- Research Area 2: Dynamic Knowledge Management & Cross-Lingual Understanding in LLMs -->
+                <div class="group relative bg-gradient-to-br from-white to-gray-50 p-8 rounded-xl shadow-lg border border-gray-200 hover:shadow-2xl hover:border-indigo-500 transition duration-300 transform hover:scale-[1.02]">
+                    <div class="card-icon-container text-indigo-600 text-2xl">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8V9m0 3v1m0 3v1"></path></svg>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-3">Dynamic Knowledge Management & Cross-Lingual Understanding in LLMs</h3>
+                    <p class="text-gray-700 leading-relaxed mb-4">
+                        My work addresses static knowledge challenges in LLMs through adaptive strategies for dynamic updates and catastrophic forgetting mitigation. I also explore propagating latent cross-lingual knowledge in multilingual LLMs to enhance low-resource language alignment.
+                    </p>
+                </div>
+
+                <!-- Research Area 3: Real-time Control & Semantic Stability in Generative Models -->
+                <div class="group relative bg-gradient-to-br from-white to-gray-50 p-8 rounded-xl shadow-lg border border-gray-200 hover:shadow-2xl hover:border-indigo-500 transition duration-300 transform hover:scale-[1.02]">
+                    <div class="card-icon-container text-indigo-600 text-2xl">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14m-5 4v-2a3 3 0 00-3-3H6a3 3 0 00-3 3v2a3 3 0 003 3h12a3 3 0 003-3v-2a3 3 0 00-3-3h-1m-6 4l2 2 4-4"></path></svg>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-3">Real-time Control & Semantic Stability in Generative Models</h3>
+                    <p class="text-gray-700 leading-relaxed mb-4">
+                        I develop innovative frameworks for real-time monitoring and adaptive guidance of complex generative processes like diffusion models. This research aims to enhance output quality, improve prompt adherence, reduce artifacts, and provide fine-grained control over generation.
+                    </p>
+                </div>
+
+                <!-- Research Area 4: Uncertainty Quantification for Robust & Controllable AI -->
+                <div class="group relative bg-gradient-to-br from-white to-gray-50 p-8 rounded-xl shadow-lg border border-gray-200 hover:shadow-2xl hover:border-indigo-500 transition duration-300 transform hover:scale-[1.02]">
+                    <div class="card-icon-container text-indigo-600 text-2xl">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 7.5V4a1 1 0 011-1h12a1 1 0 011 1v3.5m-3 0h-3.5a1 1 0 00-1 1V15a1 1 0 001 1H16a1 1 0 001-1v-4.5a1 1 0 00-1-1zm-1-4h.01M10 7.5h.01M16 7.5h.01M10 16h.01"></path></svg>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-3">Uncertainty Quantification for Robust & Controllable AI</h3>
+                    <p class="text-gray-700 leading-relaxed mb-4">
+                        My research investigates methodologies to quantify and leverage model uncertainty, enhancing control mechanisms in complex AI systems. The goal is to integrate explicit uncertainty signals into adaptive frameworks, building more reliable and auditable AI that knows what it doesn't know.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Publications Section -->
+    <section id="publications" class="py-16 md:py-24 lg:py-32 xl:py-40 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-32">
+            <h2 class="text-4xl font-bold text-gray-800 text-center mb-12 section-heading mx-auto">Selected Publications</h2>
+            <div class="space-y-8 max-w-3xl mx-auto">
+                <!-- Publication 1 -->
+                <div class="group bg-gradient-to-br from-white to-gray-50 p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-lg hover:border-indigo-500 transition duration-300 transform hover:scale-[1.01]">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                        Surgical Knowledge Rewrite in Compact LLMs: An 'Unlearn-then-Learn' Strategy with ((IA)³) for Localized Factual Modulation and Catastrophic Forgetting Mitigation
+                    </h3>
+                    <p class="text-gray-700 mb-2">
+                        <span class="font-medium">Author:</span> Stanley Ngugi
+                    </p>
+                    <p class="text-gray-600 mb-2">
+                        <span class="font-medium">Preprint Server:</span> arXiv
+                        <span class="font-medium">Date Published:</span> June 10, 2025
+                    </p>
+                    <p class="text-gray-600 text-sm max-w-prose">
+                        <span class="font-medium">Abstract:</span> This paper introduces a novel 'unlearn-then-learn' strategy for precise knowledge editing in compact LLMs, demonstrating high accuracy for new facts while mitigating catastrophic forgetting and revealing 'soft forgetting'.
+                    </p>
+                    <!-- Updated link to new HTML file with 'files/' prefix -->
+                    <a href="files/pub-surgical-knowledge-rewrite.html" class="text-indigo-600 hover:underline font-medium mt-2 inline-block">
+                        View Paper <span aria-hidden="true">&rarr;</span>
+                    </a>
+                </div>
+                <!-- Publication 2 -->
+                <div class="group bg-gradient-to-br from-white to-gray-50 p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-lg hover:border-indigo-500 transition duration-300 transform hover:scale-[1.01]">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                        Targeted Lexical Injection: Unlocking Latent Cross-Lingual Alignment in Lugha-Llama via Early-Layer LoRA Fine-Tuning
+                    </h3>
+                    <p class="text-gray-700 mb-2">
+                        <span class="font-medium">Author:</span> Stanley Ngugi
+                    </p>
+                    <p class="text-gray-600 mb-2">
+                        <span class="font-medium">Preprint Server:</span> arXiv
+                        <span class="font-medium">Date Published:</span> June 6, 2025
+                    </p>
+                    <p class="text-gray-600 text-sm max-w-prose">
+                        <span class="font-medium">Abstract:</span> This paper introduces Targeted Lexical Injection (TLI), a novel LoRA-based method revealing and leveraging early-layer latent cross-lingual alignment in LLMs (e.g., Swahili-English) to significantly boost output-level alignment.
+                    </p>
+                    <!-- Updated link to new HTML file with 'files/' prefix -->
+                    <a href="files/pub-targeted-lexical-injection.html" class="text-indigo-600 hover:underline font-medium mt-2 inline-block">
+                        View Paper <span aria-hidden="true">&rarr;</span>
+                    </a>
+                </div>
+                <!-- Publication 3 -->
+                <div class="group bg-gradient-to-br from-white to-gray-50 p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-lg hover:border-indigo-500 transition duration-300 transform hover:scale-[1.01]">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                        "Interpretable AI for Climate Modeling: A Shapley Value Approach"
+                    </h3>
+                    <p class="text-gray-700 mb-2">
+                        <span class="font-medium">Authors:</span> Stanley Ngugi, D. White
+                    </p>
+                    <p class="text-gray-600 mb-2">
+                        <span class="font-medium">Conference/Journal:</span> Journal of Climate Informatics, 2021
+                    </p>
+                    <p class="text-gray-600 text-sm max-w-prose">
+                        <span class="font-medium">Abstract:</span> This work applies Shapley values to explain complex AI models used in climate prediction, offering insights into critical meteorological features...
+                    </p>
+                    <!-- Updated link to new HTML file with 'files/' prefix -->
+                    <a href="files/pub-interpretable-ai-climate.html" class="text-indigo-600 hover:underline font-medium mt-2 inline-block">
+                        View Paper <span aria-hidden="true">&rarr;</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Research Insights Section -->
+    <section id="insights-frameworks" class="py-16 md:py-24 lg:py-32 xl:py-40 bg-gray-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-32">
+            <h2 class="text-4xl font-bold text-gray-800 text-center mb-12 section-heading mx-auto">Research Insights</h2>
+            <div class="space-y-8 max-w-3xl mx-auto">
+                <!-- Research Insight/Framework 1: Continuously Adapting Reflective Intelligence (CARI) -->
+                <div class="group bg-gradient-to-br from-gray-50 to-white p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-lg hover:border-indigo-500 transition duration-300 transform hover:scale-[1.01]">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                        Continuously Adapting Reflective Intelligence (CARI): A Proposed Framework for Lifelong LLM Learning
+                    </h3>
+                    <p class="text-gray-700 mb-2">
+                        <span class="font-medium">Type:</span> Conceptual Framework
+                        <span class="font-medium">Date Proposed:</span> March 2, 2025
+                    </p>
+                    <p class="text-gray-600 text-sm max-w-prose">
+                        <span class="font-medium">Description:</span> This conceptual framework outlines CARI, an LLM ecosystem designed for proactive, self-improving intelligence. It proposes a meta-cognitive Decision Engine and a dynamic Bayesian World Model to enable genuine, lifelong continuous learning and adaptive knowledge refinement.
+                    </p>
+                    <!-- Updated link to new HTML file with 'files/' prefix -->
+                    <a href="files/insights-cari.html" class="text-indigo-600 hover:underline font-medium mt-2 inline-block">
+                        View Details <span aria-hidden="true">&rarr;</span>
+                    </a>
+                </div>
+                <!-- Research Insight/Framework 2: Emergent AI Lingua Franca -->
+                <div class="group bg-gradient-to-br from-gray-50 to-white p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-lg hover:border-indigo-500 transition duration-300 transform hover:scale-[1.01]">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                        Emergent AI Lingua Franca: Bridging the Unspeakable Divide in Advanced AI Cognition
+                    </h3>
+                    <p class="text-gray-700 mb-2">
+                        <span class="font-medium">Type:</span> Conceptual Framework
+                        <span class="font-medium">Date Proposed:</span> February 22, 2025
+                    </p>
+                    <p class="text-gray-600 text-sm max-w-prose">
+                        <span class="font-medium">Description:</span> This research explores the inevitable divergence of AI thought into optimized, emergent cognitive forms distinct from human language, proposing frameworks to translate and align with these new modes of intelligence for a collaborative future.
+                    </p>
+                    <!-- Updated link to new HTML file with 'files/' prefix -->
+                    <a href="files/insights-ai-lingua-franca.html" class="text-indigo-600 hover:underline font-medium mt-2 inline-block">
+                        View Details <span aria-hidden="true">&rarr;</span>
+                    </a>
+                </div>
+                <!-- Research Insight/Framework 3: From Pattern to Principle: Rethinking AI's Approach to Code Understanding -->
+                <div class="group bg-gradient-to-br from-gray-50 to-white p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-lg hover:border-indigo-500 transition duration-300 transform hover:scale-[1.01]">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                        From Pattern to Principle: Rethinking AI's Approach to Code Understanding
+                    </h3>
+                    <p class="text-gray-700 mb-2">
+                        <span class="font-medium">Type:</span> Conceptual Framework
+                        <span class="font-medium">Date Proposed:</span> June 2, 2025
+                    </p>
+                    <p class="text-gray-600 text-sm max-w-prose">
+                        <span class="font-medium">Description:</span> This framework proposes reimagining AI's code understanding, moving LLMs beyond mere fluency to genuine conceptual comprehension by advocating for foundational instruction and curated learning environments for principled intelligence.
+                    </p>
+                    <!-- Updated link to new HTML file with 'files/' prefix -->
+                    <a href="files/insights-code-understanding.html" class="text-indigo-600 hover:underline font-medium mt-2 inline-block">
+                        View Details <span aria-hidden="true">&rarr;</span>
+                    </a>
+                </div>
+                <!-- Research Insight/Framework 4: SwahiliPro: Unveiling Swahili's Linguistic Soul in Large Language Models -->
+                <div class="group bg-gradient-to-br from-gray-50 to-white p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-lg hover:border-indigo-500 transition duration-300 transform hover:scale-[1.01]">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                        SwahiliPro: Unveiling Swahili's Linguistic Soul in Large Language Models
+                    </h3>
+                    <p class="text-gray-700 mb-2">
+                        <span class="font-medium">Type:</span> Conceptual Framework
+                        <span class="font-medium">Date Proposed:</span> January 6, 2025
+                    </p>
+                    <p class="text-gray-600 text-sm max-w-prose">
+                        <span class="font-medium">Description:</span> This pioneering framework, SwahiliPro, systematically imbues LLMs with a profound understanding of Swahili's intricate morphology and contextual nuances through a novel multi-phase learning pipeline, establishing a new paradigm for linguistically-aware AI in low-resource languages.
+                    </p>
+                    <!-- Updated link to new HTML file with 'files/' prefix -->
+                    <a href="files/insights-swahili-pro.html" class="text-indigo-600 hover:underline font-medium mt-2 inline-block">
+                        View Details <span aria-hidden="true">&rarr;</span>
+                    </a>
+                </div>
+                <!-- Research Insight/Framework 5: The AI Research Catalyst: Illuminating the Unseen Horizons of Knowledge -->
+                <div class="group bg-gradient-to-br from-gray-50 to-white p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-lg hover:border-indigo-500 transition duration-300 transform hover:scale-[1.01]">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                        The AI Research Catalyst: Illuminating the Unseen Horizons of Knowledge
+                    </h3>
+                    <p class="text-gray-700 mb-2">
+                        <span class="font-medium">Type:</span> Research Proposal
+                        <span class="font-medium">Date Proposed:</span> November 3, 2024
+                    </p>
+                    <p class="text-gray-600 text-sm max-w-prose">
+                        <span class="font-medium">Description:</span> This proposal introduces the AI Research Catalyst (ARC), an autonomous intelligence designed to navigate the explosion of scientific information, uncover hidden knowledge, and identify critical gaps at the frontiers of human understanding.
+                    </p>
+                    <!-- Updated link to new HTML file with 'files/' prefix -->
+                    <a href="files/insights-arc.html" class="text-indigo-600 hover:underline font-medium mt-2 inline-block">
+                        View Details <span aria-hidden="true">&rarr;</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Blog Section -->
+    <section id="blog" class="py-16 md:py-24 lg:py-32 xl:py-40 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-32">
+            <h2 class="text-4xl font-bold text-gray-800 text-center mb-12 section-heading mx-auto">Latest Blog Posts</h2>
+            <div class="space-y-8 max-w-3xl mx-auto">
+                <!-- Blog Post 1: The Unified Canvas -->
+                <div class="group bg-gradient-to-br from-white to-gray-50 p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-lg hover:border-indigo-500 transition duration-300 transform hover:scale-[1.01]">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                        The Unified Canvas: How All Disciplines Are but Different Strokes of the Same Truth
+                    </h3>
+                    <p class="text-gray-700 mb-2">
+                        <span class="font-medium">Category:</span> Philosophy of AI
+                        <span class="font-medium">Date Published:</span> June 4, 2025
+                    </p>
+                    <p class="text-gray-600 text-sm max-w-prose">
+                        <span class="font-medium">Summary:</span> Beyond academic silos, discover a radical perspective: that physics, philosophy, biology, and spirituality are not just interconnected, but different languages describing one singular, underlying reality. Explore the profound unity that binds all knowledge.
+                    </p>
+                    <!-- Updated link to new HTML file with 'files/' prefix -->
+                    <a href="files/blog-unified-canvas.html" class="text-indigo-600 hover:underline font-medium mt-2 inline-block">
+                        Read More <span aria-hidden="true">&rarr;</span>
+                    </a>
+                </div>
+                <!-- Blog Post 2: The Inquisitive Machine -->
+                <div class="group bg-gradient-to-br from-white to-gray-50 p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-lg hover:border-indigo-500 transition duration-300 transform hover:scale-[1.01]">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                        The Inquisitive Machine: How Uncertainty Fuels AI's Next Leap Beyond Consciousness
+                    </h3>
+                    <p class="text-gray-700 mb-2">
+                        <span class="font-medium">Category:</span> AI Theory
+                        <span class="font-medium">Date Published:</span> May 16, 2025
+                    </p>
+                    <p class="text-gray-600 text-sm max-w-prose">
+                        <span class="font-medium">Summary:</span> Dive into the future of AI where true intelligence isn't about simulating consciousness, but about building systems that intrinsically question and explore their own uncertainties. Learn why embracing doubt is AI's next frontier.
+                    </p>
+                    <!-- Updated link to new HTML file with 'files/' prefix -->
+                    <a href="files/blog-inquisitive-machine.html" class="text-indigo-600 hover:underline font-medium mt-2 inline-block">
+                        Read More <span aria-hidden="true">&rarr;</span>
+                    </a>
+                </div>
+                <!-- Blog Post 3: The True Scarcity -->
+                <div class="group bg-gradient-to-br from-white to-gray-50 p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-lg hover:border-indigo-500 transition duration-300 transform hover:scale-[1.01]">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                        The True Scarcity: Why Questioning, Not Intelligence, Defines Our Age
+                    </h3>
+                    <p class="text-gray-700 mb-2">
+                        <span class="font-medium">Category:</span> AI & Society
+                        <span class="font-medium">Date Published:</span> May 7, 2025
+                    </p>
+                    <p class="text-gray-600 text-sm max-w-prose">
+                        <span class="font-medium">Summary:</span> In an age of infinite information, raw intelligence is abundant, but the courage to deeply question everything is rare. This piece explores why true inquiry is the most critical skill for navigating our complex world.
+                    </p>
+                    <!-- Updated link to new HTML file with 'files/' prefix -->
+                    <a href="files/blog-true-scarcity.html" class="text-indigo-600 hover:underline font-medium mt-2 inline-block">
+                        Read More <span aria-hidden="true">&rarr;</span>
+                    </a>
+                </div>
+                <!-- Blog Post 4: The Unseen Power -->
+                <div class="group bg-gradient-to-br from-white to-gray-50 p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-lg hover:border-indigo-500 transition duration-300 transform hover:scale-[1.01]">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                        The Unseen Power: Reclaiming the Wisdom of Our Common Senses
+                    </h3>
+                    <p class="text-gray-700 mb-2">
+                        <span class="font-medium">Category:</span> Cognition & AI
+                        <span class="font-medium">Date Published:</span> May 5, 2025
+                    </p>
+                    <p class="text-gray-600 text-sm max-w-prose">
+                        <span class="font-medium">Summary:</span> Our common senses are often overlooked, yet they hold profound power as direct gateways to understanding, connection, and spiritual insight. Rediscover the innate wisdom embedded in everyday perception.
+                    </p>
+                    <!-- Updated link to new HTML file with 'files/' prefix -->
+                    <a href="files/blog-unseen-power.html" class="text-indigo-600 hover:underline font-medium mt-2 inline-block">
+                        Read More <span aria-hidden="true">&rarr;</span>
+                    </a>
+                </div>
+            </div>
+            <div class="text-center mt-12">
+                <!-- "View All Blog Posts" button (path corrected to root directory) -->
+                <a href="all-blog-posts-page.html" class="bg-indigo-600 text-white px-6 py-3 rounded-full text-lg font-semibold shadow-lg hover:bg-indigo-700 transition duration-300 transform hover:scale-105" data-link-type="blog-archive">
+                    View All Blog Posts
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 md:py-24 lg:py-32 xl:py-40 bg-gray-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-32">
+            <h2 class="text-4xl font-bold text-gray-800 text-center mb-12 section-heading mx-auto">Get in Touch</h2>
+            <div class="max-w-xl mx-auto bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+                <p class="text-lg text-gray-700 text-center mb-6 max-w-prose mx-auto">
+                    I'm always open to collaborating on new research projects, sharing insights, or discussing the future of AI. Feel free to reach out!
+                </p>
+                <form id="contact-form" action="javascript:void(0);" onsubmit="sendEmail(); return false;" class="space-y-6">
+                    <div>
+                        <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Your Name</label>
+                        <input type="text" id="name" name="name" class="shadow-sm rounded-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 block w-full p-3 border" placeholder="John Doe" required>
+                    </div>
+                    <div>
+                        <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Your Email</label>
+                        <input type="email" id="email" name="email" class="shadow-sm rounded-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 block w-full p-3 border" placeholder="you@example.com" required>
+                    </div>
+                    <div>
+                        <label for="subject" class="block text-gray-700 text-sm font-bold mb-2">Subject</label>
+                        <input type="text" id="subject" name="subject" class="shadow-sm rounded-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 block w-full p-3 border" placeholder="Inquiry about collaboration" required>
+                    </div>
+                    <div>
+                        <label for="message" class="block text-gray-700 text-sm font-bold mb-2">Message</label>
+                        <textarea id="message" name="message" rows="5" class="shadow-sm rounded-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 block w-full p-3 border" placeholder="I would like to discuss..." required></textarea>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="bg-indigo-600 text-white px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:bg-indigo-700 transition duration-300 transform hover:scale-105">
+                            Send Message
+                        </button>
+                    </div>
+                </form>
+                <div class="mt-8 text-center text-gray-600">
+                    <p class="max-w-prose mx-auto">Alternatively, connect with me on:</p>
+                    <div class="flex justify-center space-x-6 mt-4">
+                        <!-- LinkedIn Icon -->
+                        <a href="https://www.linkedin.com/in/stanley-mwaura-59b64233b/" target="_blank" class="text-gray-600 hover:text-indigo-600 transition duration-300" aria-label="LinkedIn Profile">
+                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path></svg>
+                        </a>
+                        <!-- GitHub Icon -->
+                        <a href="https://github.com/StanNgugi" target="_blank" class="text-gray-600 hover:text-indigo-600 transition duration-300" aria-label="GitHub Profile">
+                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.165-1.11-1.477-1.11-1.477-.909-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.529 2.341 1.088 2.91.828.092-.643.354-1.088.648-1.336-2.22-.253-4.555-1.113-4.555-4.953 0-1.096.392-1.992 1.029-2.697-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.7.116 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.099 2.65.64.706 1.028 1.602 1.028 2.697 0 3.85-2.339 4.69-4.566 4.943.359.309.678.92.678 1.855 0 1.336-.012 2.419-.012 2.747 0 .268.18.58.688.482C21.137 20.19 24 16.425 24 12.017 24 6.484 19.522 2 14 2h-2z"></path></svg>
+                        </a>
+                        <!-- Twitter Icon (Reverted to classic bird logo) -->
+                        <a href="https://x.com/stann4u" target="_blank" class="text-gray-600 hover:text-indigo-600 transition duration-300" aria-label="Twitter Profile">
+                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M22.46 6c-.77.34-1.6.57-2.46.68.89-.53 1.56-1.37 1.88-2.39-.83.49-1.75.84-2.73 1.02-.79-.84-1.92-1.37-3.17-1.37-2.4 0-4.35 1.95-4.35 4.35 0 .34.04.68.12 1-.02-.02-.04-.04-.06-.06C7.59 10.02 4.09 8.16 1.78 4.79c-.37.64-.58 1.39-.58 2.18 0 1.51.77 2.85 1.94 3.63-.72-.02-1.39-.22-1.98-.55v.05c0 2.12 1.51 3.88 3.5 4.29-.37.1-.76.15-1.16.15-.28 0-.55-.03-.81-.07.56 1.74 2.17 3.01 4.08 3.04-1.49 1.17-3.37 1.88-5.43 1.88-.35 0-.7-.02-1.04-.06C2.26 19.8 4.41 20.5 6.64 20.5c7.96 0 12.33-6.59 12.33-12.34 0-.19-.01-.39-.02-.58.85-.61 1.58-1.38 2.16-2.26z"/>
+                            </svg>
+                        </a>
+                        <!-- ArXiv Icon -->
+                        <a href="https://arxiv.org/search/?searchtype=author&query=Ngugi%2C+S" target="_blank" class="text-gray-600 hover:text-indigo-600 transition duration-300" aria-label="ArXiv Profile">
+                            <svg class="w-20 h-10" fill="currentColor" viewBox="0 0 1000 200" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="1000" height="200" fill="none"/>
+                                <text x="0" y="150" font-family="Arial, sans-serif" font-size="160" font-weight="bold" fill="currentColor">
+                                    arXiv
+                                </text>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer class="bg-gray-800 text-white py-8 rounded-t-3xl shadow-inner">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-32 text-center md:flex md:justify-between md:items-center">
+            <p class="mb-4 md:mb-0">&copy; 2025 Stanley Ngugi. All rights reserved.</p>
+            <div class="flex justify-center space-x-6">
+                <a href="#about" class="hover:text-indigo-400 transition duration-300">About</a>
+                <a href="#research" class="hover:text-indigo-400 transition duration-300">Research</a>
+                <a href="#contact" class="hover:text-indigo-400 transition duration-300">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Mobile Menu Toggle and Contact Form -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('section[id]'); // Get all sections with an ID
+
+            // Toggle mobile menu visibility
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                });
+
+                // Close mobile menu when a link is clicked
+                mobileMenu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.add('hidden');
+                    });
+                });
+            } else {
+                console.error("Mobile menu button or menu not found.");
+            }
+
+            // Function to update active navigation link
+            function updateActiveNavLink() {
+                let currentActiveSection = null;
+                const headerHeight = document.querySelector('header').offsetHeight; // Get header height for offset
+
+                // Determine the currently visible section based on scroll position
+                // A small buffer is added to ensure smooth transitions when scrolling between sections
+                // and to account for the header's height when determining active section.
+                sections.forEach(section => {
+                    const rect = section.getBoundingClientRect();
+                    // Section is considered active if its top is visible and near the top of the viewport
+                    // and its bottom is not yet scrolled past the top of the viewport
+                    if (rect.top <= headerHeight + 50 && rect.bottom > headerHeight + 50) { 
+                        currentActiveSection = section.id;
+                    }
+                });
+
+                // Set active class on corresponding navigation link
+                navLinks.forEach(link => {
+                    link.classList.remove('active'); // Remove active from all links
+                    // Only activate if href starts with # (internal link), not for external pages
+                    if (link.getAttribute('href').startsWith('#') && link.getAttribute('href').substring(1) === currentActiveSection) {
+                        link.classList.add('active'); // Add active to the current section's link
+                    }
+                });
+            }
+
+            // Smooth scrolling for internal navigation links (those starting with #)
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    const targetId = this.getAttribute('href');
+
+                    // If the href is just '#', allow default browser behavior (scroll to top)
+                    if (targetId === '#') {
+                        return; // Let the browser handle the default scroll to top
+                    }
+
+                    // Prevent default anchor behavior to allow custom smooth scrolling
+                    e.preventDefault();
+
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        // Using scrollIntoView with 'smooth' behavior,
+                        // and CSS scroll-padding-top handles the fixed header offset.
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start' // Aligns the top of the element with the top of the scrollable area
+                        });
+                    } else {
+                        console.error(`Element with ID '${targetId.substring(1)}' not found.`);
+                    }
+                });
+            });
+
+            // --- Progressive Disclosure for "About Me" Section ---
+            const toggleAboutMeButton = document.getElementById('toggle-about-me');
+            const moreAboutText = document.getElementById('more-about-text');
+
+            if (toggleAboutMeButton && moreAboutText) {
+                toggleAboutMeButton.addEventListener('click', () => {
+                    if (moreAboutText.classList.contains('hidden')) {
+                        moreAboutText.classList.remove('hidden');
+                        toggleAboutMeButton.textContent = 'Show Less';
+                    } else {
+                        moreAboutText.classList.add('hidden');
+                        toggleAboutMeButton.textContent = 'Read More';
+                        // Optional: Scroll back to the top of the About section if expanded content is now hidden
+                        const aboutSection = document.getElementById('about');
+                        if (aboutSection) {
+                            // Scroll to the About section's top, respecting the sticky header
+                            aboutSection.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }
+                    }
+                });
+            } else {
+                console.error("About Me toggle elements not found.");
+            }
+
+            // --- Intelligent Scroll Position Restoration for Blog Archive ---
+            // Save scroll position when navigating to blog archive
+            // This now only applies to the 'View All Blog Posts' button
+            const blogArchiveLink = document.querySelector('a[data-link-type="blog-archive"]');
+            if (blogArchiveLink) {
+                blogArchiveLink.addEventListener('click', (e) => {
+                    sessionStorage.setItem('returnToBlog', 'true');
+                });
+            }
+
+
+            // Restore scroll position when returning to index.html from blog archive
+            window.addEventListener('load', () => {
+                if (sessionStorage.getItem('returnToBlog') === 'true') {
+                    sessionStorage.removeItem('returnToBlog'); // Clear the flag
+                    const blogSection = document.getElementById('blog');
+                    if (blogSection) {
+                        // Add a small delay to ensure the sticky header's height is stable
+                        // and scroll-padding-top is applied before scrolling.
+                        setTimeout(() => {
+                            blogSection.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }, 300); // Increased delay for better reliability
+                    }
+                }
+            });
+
+            // Initial call and scroll event listener for active links
+            updateActiveNavLink(); // Set active link on page load
+            window.addEventListener('scroll', updateActiveNavLink);
+        });
+
+        /**
+         * Sends an email using the mailto protocol.
+         * This function gathers data from the contact form, constructs a mailto URI,
+         * and attempts to open the user's default email client.
+         */
+        function sendEmail() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+
+            // Target email address
+            const recipientEmail = "sngugi.research@gmail.com";
+
+            // Encode components for the mailto URI
+            const encodedSubject = encodeURIComponent(`Inquiry from Website: ${subject}`);
+            const encodedBody = encodeURIComponent(
+                `Name: ${name}\n` +
+                `Email: ${email}\n\n` +
+                `Message:\n${message}`
+            );
+
+            // Construct the mailto URI
+            const mailtoLink = `mailto:${recipientEmail}?subject=${encodedSubject}&body=${encodedBody}`;
+
+            // Open the user's default email client
+            window.location.href = mailtoLink;
+
+            // Optionally, clear the form after submission (user might cancel sending email)
+            document.getElementById('contact-form').reset();
+        }
+    </script>
+</body>
+</html>

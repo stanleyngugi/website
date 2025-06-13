@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Targeted Lexical Injection: Unlocking Latent Cross-Lingual Alignment in Lugha-Llama via Early-Layer LoRA Fine-Tuning</title>
+    <meta name="description" content="Explores how AI's next major breakthrough will come from developing a functional capacity for questioning, driven by recognizing and exploring its own uncertainty, rather than merely achieving consciousness.">
+    <meta name="keywords" content="AI, Artificial Intelligence, Machine Learning, Uncertainty, Questioning, Inquiry, Consciousness, Epistemic Uncertainty, Autonomous Data Generation, Future of AI, Stanley Ngugi, Blog, Articles, Essays">
+    <meta name="author" content="Stanley Ngugi">
+
+    <link rel="icon" href="/favicon.ico" sizes="any">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" xintegrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Correct way to load Tailwind CSS Typography Plugin for CDN -->
+    <script src="https://unpkg.com/@tailwindcss/typography@0.5.10/dist/typography.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'], // Inter is the *only* font for all text
+            }
+          }
+        },
+        // Removed `plugins: [tailwind.plugins.typography]` as the plugin is now loaded directly via CDN script
+      }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <style>
+        /* General body styling for consistent font and background */
+        body {
+            font-family: 'Inter', sans-serif; /* Ensures Inter is the default body font */
+            scroll-behavior: smooth; /* Smooth scrolling for anchor links */
+            background-color: #f8fafc; /* Light background for consistency */
+            scroll-padding-top: 5rem; /* Space for the sticky header when jumping to sections */
+            color: theme('colors.gray.900'); /* Ensures default body text is very dark for high contrast */
+        }
+
+        /* Specific styling for section headings, consistent with your index.html's look */
+        .section-heading {
+            position: relative;
+            display: inline-block;
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem;
+            font-family: 'Inter', sans-serif; /* Explicitly use Inter for these headings */
+        }
+        .section-heading::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50%; /* Initial width */
+            height: 4px;
+            background-color: #6366f1; /* Indigo-500 */
+            border-radius: 9999px; /* Fully rounded */
+            transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out; /* Smooth transition */
+        }
+        .section-heading:hover::after {
+            width: 100%; /* Expand width on hover */
+            background-color: #4f46e5; /* Deeper indigo on hover */
+        }
+        /* Style for active navigation link (if used on this page, but primarily for index.html) */
+        .nav-link.active {
+            background-color: #e0e7ff; /* Indigo-100 */
+            color: #4338ca; /* Indigo-700 */
+            font-weight: 600; /* Semi-bold */
+        }
+
+        /* Stretched link for full card clickability (from your index.html) */
+        .stretched-link::after {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1; /* Ensure it's above other content in the card but below elements with higher z-index like buttons */
+            content: "";
+        }
+
+        /* Accessibility: Reduce motion for those who prefer it */
+        @media (prefers-reduced-motion) {
+            .blog-card-wrapper {
+                transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+            }
+            .blog-card-wrapper:hover {
+                transform: none !important;
+            }
+            .section-heading::after {
+                transition: none;
+            }
+        }
+
+        /* Overrides for Tailwind Typography defaults (prose-2xl) for ultimate readability */
+        /* These styles are meticulously crafted for precise spacing and optimized line heights. */
+
+        /* Main Article Title (H1) Styling - Ensures Inter font and gradient application */
+        .article-title {
+            font-family: 'Inter', sans-serif; /* Explicitly ensure Inter is used */
+        }
+
+        /* Headings (H2) Styling - Strong visual breaks with Inter Black and gradients */
+        .prose.prose-2xl :where(h2):not(:where([class~="not-prose"] *)) {
+            font-family: 'Inter', sans-serif; /* Explicitly use Inter for headings */
+            font-size: 2.25em; /* Large size for H2s from prose-2xl, scales responsively */
+            line-height: 1.25; /* Slightly relaxed line height for headings */
+            margin-top: 4.5em; /* Generous space above headings for distinct section breaks */
+            margin-bottom: 1em; /* Consistent space below headings to visually connect to content */
+            padding-bottom: 0.75em; /* Padding for the subtle bottom border */
+            border-bottom: 1px solid theme('colors.gray.300'); /* A clean separator line */
+            font-weight: 900; /* Inter Black for maximum visual impact and authority */
+            /* Gradient for headings, consistent with the main title's premium look */
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            background-image: linear-gradient(to right, theme('colors.purple.600'), theme('colors.indigo.600'));
+        }
+
+        /* Paragraph Styling - Using Inter for main text with *adjusted* spacing */
+        .prose.prose-2xl :where(p):not(:where([class~="not-prose"] *)) {
+            font-family: 'Inter', sans-serif; /* Explicitly ensure paragraphs use Inter */
+            margin-top: 1.5em; /* Adjusted space between paragraphs for better visual flow and less density */
+            margin-bottom: 1.5em;
+            line-height: 1.65; /* Slightly tighter line height (leading), balancing readability and compactness */
+            color: theme('colors.gray.900'); /* Ensures body text is very dark for high contrast */
+        }
+
+        /* Strong/Bold text within prose - ensure it uses Inter and the correct bold weight */
+        .prose.prose-2xl :where(strong):not(:where([class~="not-prose"] *)) {
+            font-family: 'Inter', sans-serif; /* Explicitly ensure bold text uses Inter */
+            font-weight: 700; /* Inter Semi-Bold */
+            color: theme('colors.gray.900'); /* Ensure it remains dark for strong contrast */
+        }
+
+        /* List Styling - Adjusted to harmonize with new paragraph spacing */
+        .prose.prose-2xl :where(ul):not(:where([class~="not-prose"] *)),
+        .prose.prose-2xl :where(ol):not(:where([class~="not-prose"] *)) {
+            margin-top: 1.8em; /* Adjusted space above and below lists */
+            margin-bottom: 1.8em;
+            list-style-type: disc; /* Ensure disc for unordered lists */
+        }
+
+        .prose.prose-2xl :where(li):not(:where([class~="not-prose"] *)) {
+            margin-top: 0.7em; /* Adjusted spacing between list items */
+            margin-bottom: 0.7em;
+            padding-left: 0.75em; /* Adds space for the bullet */
+        }
+
+        /* Blockquote styles are maintained as they are already highly effective and visually striking. */
+        .prose.prose-2xl :where(blockquote):not(:where([class~="not-prose"] *)) {
+            margin-top: 3em;
+            margin-bottom: 3em;
+            padding-left: 2rem; /* Matches prose-blockquote:pl-8 */
+            padding-right: 1rem; /* Matches prose-blockquote:pr-4 */
+            padding-top: 1.25rem; /* Matches prose-blockquote:py-5 */
+            padding-bottom: 1.25rem; /* Matches prose-blockquote:py-5 */
+            border-left: 4px solid theme('colors.blue.500'); /* Specified for this article's blockquote */
+            background-image: linear-gradient(to right, theme('colors.blue.50'), theme('colors.sky.50'), theme('colors.cyan.50')); /* Consistent gradient */
+            color: theme('colors.gray.800'); /* Matches prose-blockquote:text-gray-800 */
+            font-style: italic; /* Matches prose-blockquote:italic */
+            border-top-right-radius: 0.75rem; /* Matches prose-blockquote:rounded-r-xl */
+            border-bottom-right-radius: 0.75rem; /* Matches prose-blockquote:rounded-r-xl */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1); /* Matches prose-blockquote:shadow-lg */
+        }
+
+        /* Specific blockquote style from the original HTML for this article */
+        /* (No specific blockquote styles in original prompt, so keeping the general prose one) */
+
+        /* Code Styling within Prose */
+        .prose.prose-2xl :where(code):not(:where([class~="not-prose"] *)) {
+            background-color: theme('colors.purple.50');
+            color: theme('colors.purple.700');
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+            padding-top: 0.25rem;
+            padding-bottom: 0.25rem;
+            border-radius: 0.5rem;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 0.875em;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        /* Horizontal Rule (hr) Styling */
+        .article-hr {
+            margin-top: 4rem;
+            margin-bottom: 5rem;
+            border: 0;
+            height: 1px;
+            background: linear-gradient(to right, transparent, theme('colors.blue.300'), transparent); /* Using blue for hr */
+            width: 100%;
+            max-width: 28rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <header class="bg-white shadow-md py-4 sticky top-0 z-50">
+        <nav class="container mx-auto px-6 sm:px-8 md:px-12 lg:px-16 xl:px-24 2xl:px-36 flex justify-between items-center">
+            <a href="/index.html#hero" class="text-2xl font-bold text-indigo-700 rounded-lg px-3 py-2 transition duration-300 hover:bg-indigo-50 hover:text-indigo-800">
+                Stanley
+            </a>
+            <div class="hidden md:flex space-x-6">
+                <a href="/index.html#about" class="nav-link text-gray-600 hover:text-indigo-700 font-medium transition duration-300 px-3 py-2 rounded-lg hover:bg-gray-100">About</a>
+                <a href="/index.html#research" class="nav-link text-gray-600 hover:text-indigo-700 font-medium transition duration-300 px-3 py-2 rounded-lg hover:bg-gray-100">Research</a>
+                <a href="/index.html#publications" class="nav-link block text-gray-600 hover:text-indigo-700 font-medium transition duration-300 px-3 py-2 rounded-lg hover:bg-gray-100">Publications</a>
+                <a href="/index.html#insights-frameworks" class="nav-link block text-gray-600 hover:text-indigo-700 font-medium transition duration-300 px-3 py-2 rounded-lg hover:bg-gray-100">Insights</a>
+                <a href="/index.html#insights-frameworks" class="nav-link block text-gray-600 hover:text-indigo-700 font-medium transition duration-300 px-3 py-2 rounded-lg hover:bg-gray-100">Blog</a>
+                <a href="/index.html#contact" class="nav-link block text-gray-600 hover:text-indigo-700 font-medium transition duration-300 px-3 py-2 rounded-lg hover:bg-gray-100">Contact</a>
+            </div>
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-gray-600 focus:outline-none focus:text-indigo-700">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-white mt-2 px-4 py-2 space-y-2 border-t border-gray-200">
+            <a href="/index.html#about" class="nav-link block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">About</a>
+            <a href="/index.html#research" class="nav-link block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">Research</a>
+            <a href="/index.html#publications" class="nav-link block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">Publications</a>
+            <a href="/index.html#insights-frameworks" class="nav-link block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">Insights</a>
+            <a href="/index.html#insights-frameworks" class="nav-link block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">Blog</a>
+            <a href="/index.html#contact" class="nav-link block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">Contact</a>
+        </div>
+    </header>
+
+    <main>
+        <div class="bg-white py-12 sm:py-16 lg:py-20">
+            <div class="mx-auto max-w-3xl px-6 sm:px-8 lg:px-10">
+                <article class="space-y-12 md:space-y-16">
+
+                    <header class="mb-12 md:mb-16 text-center pb-10 md:pb-12 border-b border-gray-200">
+                        <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black !leading-tight mb-6
+                                   article-title bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500">
+                            Targeted Lexical Injection: Unlocking Latent Cross-Lingual Alignment in Lugha-Llama via Early-Layer LoRA Fine-Tuning
+                        </h1>
+                        <p class="text-xl md:text-2xl text-gray-700 mt-4 max-w-2xl mx-auto leading-relaxed font-sans">
+                            Stanley Ngugi¹<br>sngugi.research@gmail.com<br>June 5, 2025
+                        </p>
+                    </header>
+
+                    <div class="prose prose-2xl prose-slate max-w-none text-gray-900
+                                  prose-blockquote:mt-10 prose-blockquote:mb-10
+                                  prose-blockquote:pl-8 prose-blockquote:pr-6 prose-blockquote:py-6
+                                  prose-blockquote:border-l-4 prose-blockquote:border-blue-500
+                                  prose-blockquote:bg-gradient-to-r prose-blockquote:from-blue-50 prose-blockquote:via-sky-50 prose-blockquote:to-cyan-50
+                                  prose-blockquote:text-gray-800 prose-blockquote:italic
+                                  prose-blockquote:rounded-r-xl prose-blockquote:shadow-lg
+                                  prose-a:text-indigo-600 hover:prose-a:text-indigo-700 prose-a:font-semibold prose-a:no-underline hover:prose-a:underline
+                                  prose-headings:font-serif prose-headings:text-transparent prose-headings:bg-clip-text prose-headings:bg-gradient-to-r prose-headings:from-purple-600 prose-headings:to-indigo-600 prose-headings:pb-3 prose-headings:border-b prose-headings:border-gray-300 prose-headings:mb-6 prose-headings:mt-12
+                                  prose-code:font-mono prose-code:text-purple-700 prose-code:bg-purple-50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:text-[0.9em] prose-code:font-medium
+                                  prose-ul:list-disc prose-ul:pl-8 prose-ul:space-y-4 prose-ul:my-8
+                                  prose-li:pl-3">
+
+                        <!-- Abstract Section -->
+                        <div class="abstract">
+                            <h3>Abstract</h3>
+                            <p>Large Language Models (LLMs) have demonstrated remarkable capabilities, yet their performance in low-resource languages (LRLs), such as Swahili, often lags due to data scarcity and underrepresentation in pre-training. A key challenge is achieving robust cross-lingual lexical alignment, crucial for tasks like translation and cross-lingual information retrieval. This paper introduces Targeted Lexical Injection (TLI), a novel and efficient fine-tuning approach. We first demonstrate that Lugha-Llama-8B-wura, a Swahili-centric LLM, exhibits strong, near-perfect lexical alignment for Swahili-English word pairs in its early internal layers (specifically Layer 2, with 0.99998 average cosine similarity based on a pilot study), a capability not fully reflected in its final output representations (baseline 0.32 similarity on our evaluation set). TLI leverages this insight by using Low-Rank Adaptation (LoRA) and a contrastive learning objective to fine-tune the model, specifically targeting embeddings from this empirically identified optimal early layer. Our experiments show that TLI significantly improves the output-level lexical alignment for 623 trained Swahili-English word pairs, increasing average cosine similarity from 0.3211 to 0.4113 (+28.08%, $p<1.33e-240$). More importantly, these improvements generalize remarkably well to 63 unseen control word pairs, with similarity increasing from 0.3143 to 0.4033 (+28.32%, $p<7.17e-27$). These findings suggest TLI enhances the model's ability to preserve and propagate its inherent early-layer cross-lingual knowledge, offering a parameter-efficient and effective strategy for improving lexical alignment in LRL-focused LLMs.</p>
+                        </div>
+                        <p class="keywords"><strong>Keywords:</strong> Low-Resource Languages, Swahili, Large Language Models, Cross-Lingual Lexical Alignment, Fine-Tuning, LoRA, Contrastive Learning, Model Interpretability.</p>
+
+                        <h2>1 Introduction</h2>
+                        <p>The proliferation of Large Language Models (LLMs) has revolutionized natural language processing (NLP). However, their efficacy is often skewed towards high-resource languages, leaving low-resource languages (LRLs) like Swahili underserved (Joshi et al., 2020; Adelani et al., 2021). Bridging this gap is crucial for equitable technological advancement and for unlocking the vast knowledge encoded in these languages. A fundamental aspect of multilingual understanding in LLMs is cross-lingual lexical alignment—the model's ability to recognize that words with similar meanings in different languages (e.g., Swahili "mkate" and English "bread") should have closely related internal representations (Conneau et al., 2019). Suboptimal lexical alignment can hinder performance in various downstream tasks, including machine translation, cross-lingual information retrieval, and code-switching understanding (Pires et al., 2019; Wu and Dredze, 2019).</p>
+
+                        <p>Initial assessments of multilingual LLMs, including those focused on African languages like Lugha-Llama (Lugha Factory, 2023), often reveal that while generally capable, their output-level</p>
+                        <p class="page-number">1</p>
+
+                        <div class="page-break"></div>
+
+                        <!-- Page 2 -->
+                        <p>lexical alignment for specific word pairs can be inconsistent or weak. This might lead one to assume that the model fundamentally lacks the necessary cross-lingual lexical knowledge. However, our preliminary investigations into the internal workings of Lugha-Llama-8B-wura revealed a crucial insight: the model achieves near-perfect lexical alignment for Swahili-English word pairs within its very early transformer layers (specifically Layer 2, with an average cosine similarity approaching 1.0, as detailed in our pilot study in Section 3.2). In contrast, the alignment measured at the model's final output layer embeddings for our evaluation set is considerably lower (around 0.32 average cosine similarity). This suggests that the primary challenge is not an inherent inability to align these lexical items, but rather an underutilization or degradation of this strong, internally-formed alignment as information propagates through the network to the final output stage.</p>
+
+                        <p>To address this specific challenge, we propose Targeted Lexical Injection (TLI), a fine-tuning methodology that leverages Low-Rank Adaptation (LoRA) (Hu et al., 2021) and a contrastive learning objective. Crucially, TLI is designed to operate on embeddings extracted from the empirically identified optimal early layer (Layer 2) where lexical alignment is already maximal. By doing so, TLI aims to reinforce these strong internal alignments and train the LoRA adapters to better preserve and propagate this high-fidelity cross-lingual information to the model's output. We hypothesize that:</p>
+
+                        <ol>
+                            <li>TLI, by fine-tuning LoRA adapters based on contrastive loss applied to embeddings from the optimal early layer (Layer 2), will significantly improve the output-level cross-lingual lexical alignment of targeted Swahili-English word pairs in Lugha-Llama.</li>
+                            <li>This improvement will generalize to unseen Swahili-English word pairs, as TLI enhances the model's general mechanism for processing and propagating its inherent early-layer lexical alignments, rather than merely memorizing specific trained pairs.</li>
+                        </ol>
+
+                        <p>Our contributions are:</p>
+                        <ul>
+                            <li>We empirically demonstrate the existence of strong, latent cross-lingual lexical alignment in the early layers of a Swahili-centric LLM (Lugha-Llama), which contrasts with weaker alignment at its output interface on our evaluation set.</li>
+                            <li>We propose TLI, a novel LoRA-based fine-tuning technique that specifically targets these optimal early-layer embeddings to enhance output-level alignment.</li>
+                            <li>We show that TLI achieves statistically significant improvements in lexical alignment for a curated set of trained Swahili-English word pairs.</li>
+                            <li>Critically, we demonstrate that TLI's benefits generalize comparably to unseen control vocabulary, suggesting a more fundamental refinement of the model's cross-lingual processing pathways.</li>
+                        </ul>
+
+                        <p>This paper is structured as follows: Section 2 discusses related work. Section 3 details our methodology, including the pilot study for layer selection, word pair curation, and the TLI fine-tuning process. Section 4 presents our experimental results. Section 5 discusses the implications of these findings, and Section 6 concludes with future research directions.</p>
+
+                        <h2>2 Related Work</h2>
+                        <p>Improving cross-lingual understanding in LLMs, especially for LRLs, is an active area of research. Existing approaches can be broadly categorized.</p>
+                        <p class="page-number">2</p>
+
+                        <div class="page-break"></div>
+
+                        <!-- Page 3 -->
+                        <p>Cross-Lingual Word Embeddings and Alignment Traditional methods focused on learning static word embeddings for multiple languages and then aligning them in a shared space using techniques like linear transformations (Mikolov et al., 2013; Xing et al., 2015) or shared projection matrices (Smith et al., 2017), often relying on bilingual dictionaries or parallel corpora. Contextual embeddings from models like mBERT (Devlin et al., 2018) and XLM-R (Conneau et al., 2019) inherently learn some degree of cross-lingual alignment due to multilingual pre-training, but this alignment can be imperfect, especially for LRLS.</p>
+
+                        <p>Fine-tuning LLMs for LRLS Full fine-tuning of LLMs on LRL-specific data or parallel corpora can improve performance (Artetxe et al., 2019), but it is computationally expensive and can lead to catastrophic forgetting of knowledge from other languages or the original pre-training. Parameter-Efficient Fine-Tuning (PEFT) methods have emerged as a more viable alternative.</p>
+
+                        <p>Low-Rank Adaptation (LoRA) LoRA (Hu et al., 2021) is a popular PEFT technique that injects trainable low-rank matrices into the layers of a pre-trained model. It significantly reduces the number of trainable parameters, making fine-tuning more accessible while often achieving performance comparable to full fine-tuning. LoRA has been successfully applied to various adaptation tasks in LLMs.</p>
+
+                        <p>Contrastive Learning for Representation Alignment Contrastive learning aims to learn representations by pulling similar items (positives) closer together in the embedding space while pushing dissimilar items (negatives) further apart (Hadsell et al., 2006; Chen et al., 2020). It has been widely used for learning visual representations and, more recently, for aligning representations in NLP, including cross-lingual alignment (Pan et al., 2021; Wang et al., 2022).</p>
+
+                        <p>Interpretability of LLM Layers Research into LLM interpretability suggests that different layers specialize in capturing different types of information. Early layers often handle more surface-level or local features, while deeper layers capture more abstract, contextual, or task-specific information (Tenney et al., 2019; Rogers et al., 2020). Some studies have explored how linguistic properties, including cross-lingual information, are represented across layers (Lauscher et al., 2020), but the specific phenomenon of strong early-layer lexical alignment versus weaker output alignment for LRLs, and targeted interventions based on this, remains less explored.</p>
+
+                        <p>Our TLI approach distinguishes itself by: (a) empirically identifying an optimal internal model layer where pre-existing cross-lingual lexical alignment is strongest; (b) using LoRA for parameter-efficient fine-tuning; and (c) applying a contrastive learning objective directly at this identified optimal internal layer. This strategy aims to unlock and amplify the model's latent capabilities rather than solely relying on surface-level data or teaching alignment from scratch at the output layer.</p>
+
+                        <h2>3 Methodology</h2>
+                        <p>Our methodology comprises three main stages: (1) identifying the optimal pre-existing alignment layer within the base LLM via a pilot study; (2) Word pair curation for training and evaluation; and (3) implementing and evaluating Targeted Lexical Injection (TLI) using LoRA fine-tuning.</p>
+
+                        <h3>3.1 Base Model</h3>
+                        <p>We use Lugha-Llama-8B-wura (Lugha Factory, 2023) as our base model. Lugha-Llama is an open-source LLM specifically adapted for several African languages, including Swahili, built upon the Llama-3 architecture. We utilize the 8-billion parameter "wura" variant. The model is</p>
+                        <p class="page-number">3</p>
+
+                        <div class="page-break"></div>
+
+                        <!-- Page 4 -->
+                        <p>loaded in 4-bit precision using bitsandbytes (Dettmers et al., 2022) with NF4 quantization and torch.bfloat16 as the compute data type to manage computational resources effectively.</p>
+
+                        <h3>3.2 Identifying the Optimal Pre-existing Alignment Layer (Pilot Study)</h3>
+                        <p>To inform our TLI strategy, we first conducted a pilot study to determine which layer of the Lugha-Llama-8B-wura model exhibits the highest degree of inherent cross-lingual lexical alignment for Swahili-English word pairs before any fine-tuning.</p>
+
+                        <p><strong>Procedure</strong> A curated set of Swahili-English word pairs (described in Section 3.3) was used for this initial scan. For each word in a pair, its embedding was extracted from the output of every transformer layer in Lugha-Llama (Layers 0 through 31, where Layer 0 represents the initial input embeddings). Embeddings were generated by tokenizing the word, passing it through the model, and extracting the hidden states from the specified layer. Mean pooling over the attention-masked token embeddings was employed to obtain a single vector representation for each word. Crucially, both the Swahili and English word embeddings from each layer were L2-normalized. The cosine similarity between the L2-normalized Swahili embedding and its corresponding L2-normalized English embedding was calculated for each pair at each layer. The average cosine similarity across all word pairs was then computed for each layer.</p>
+
+                        <p><strong>Results of Pilot Study</strong> The analysis, visually summarized in Figure 1, revealed a striking pattern. Layer 0 (input embeddings) showed a modest average cosine similarity of approximately 0.3153. A dramatic increase was observed at Layer 1, with an average similarity of 0.9808. Layer 2 exhibited the peak average cosine similarity, reaching 0.99998, indicating near-perfect alignment within this specific layer during this scan. This remarkable alignment, differing from perfect unity potentially due to floating-point precision or minimal processing noise, suggests the model has already performed significant lexical mapping at this early stage. Subsequent layers (3-31) maintained very high similarity in this pilot scan, though with a slight, gradual decrease, with Layer 31 showing an average similarity of 0.9876. It is important to note that this high similarity at Layer 31 in the pilot scan may reflect the specific conditions or word subset used for this comprehensive layer-wise analysis, and differs from the baseline output similarity (~0.32) observed on our full evaluation set (see Section 4.1), which represents the performance TLI aims to improve.</p>
+
+                        <p><strong>Conclusion of Pilot Study</strong> This pilot study empirically demonstrated that Lugha-Llama-8B-wura possesses a strong, almost perfect inherent lexical alignment capability for Swahili-English pairs at Layer 2. This layer was therefore selected as the TARGET LAYER for extracting embeddings during the TLI fine-tuning process.</p>
+
+                        <h3>3.3 Word Pair Curation</h3>
+                        <p>A dataset of 686 unique Swahili-English word pairs was meticulously curated. These pairs were primarily sourced from the SAWA Corpus (Sim et al., 2022), focusing on common vocabulary, culturally relevant terms, and expressions that might pose challenges for code-switching or translation. The curated set includes both single words and common multi-word expressions (MWEs). This dataset was then split into:</p>
+
+                        <ul>
+                            <li>Trained Set: 623 pairs used for the TLI fine-tuning process.</li>
+                            <li>Control Set: 63 pairs, semantically distinct from the trained set (ensuring no direct semantic overlap or close morphological relation beyond general language characteristics) and entirely unseen during TLI fine-tuning, used to evaluate the generalization capabilities of the TLI method.</li>
+                        </ul>
+                        <p class="page-number">4</p>
+
+                        <div class="page-break"></div>
+
+                        <!-- Page 5 -->
+                        <div class="figure figure-1">
+                            <!-- Image removed as requested -->
+                            <p class="figure-caption"><strong>Figure 1:</strong> Average cosine similarity between Swahili-English translation pairs across all 32 transformer layers of the Lugha-Llama-8B-wura model (pre-TLI) during the pilot study. Layer 0 represents input embeddings. Layer 2 (indicated by the red dashed line) exhibits the peak pre-existing lexical alignment ($\sim0.99998$ average similarity) and was selected as the TARGET LAYER for TLI.</p>
+                        </div>
+
+                        <h3>3.4 Targeted Lexical Injection (TLI) via LoRA Fine-Tuning</h3>
+                        <p>The TLI process aims to fine-tune the Lugha-Llama model using LoRA adapters such that the strong lexical alignment observed internally at Layer 2 is better preserved and reflected in the model's final output representations.</p>
+
+                        <p><strong>Embedding Extraction for TLI Training</strong> During TLI fine-tuning, for each Swahili anchor word and its corresponding English positive translation in the training batch, their respective embeddings were extracted from the output of TARGET_LAYER= 2 of the Lugha-Llama model. Consistent with the pilot study, these embeddings were mean-pooled over attention-masked tokens and then L2-normalized.</p>
+
+                        <p><strong>LoRA Configuration</strong> We employed LoRA with the following configuration:</p>
+                        <ul>
+                            <li>Rank (r): 16</li>
+                            <li>Alpha (lora_alpha): 32</li>
+                            <li>Dropout (lora_dropout): 0.05</li>
+                            <li>Target Modules: ["q_proj", "v_proj"] (query and value projection matrices in the self-attention mechanisms)</li>
+                            <li>Task Type: CAUSAL_LM</li>
+                            <li>Bias: none</li>
+                        </ul>
+
+                        <p><strong>Contrastive Loss Function</strong> A contrastive learning objective based on a triplet margin loss was used. For an anchor Swahili embedding ($e_{aL2}$ from Layer 2) and its positive English translation embedding ($e_{pL2}$ from Layer 2), we aim to minimize their distance while maximizing the distance to negative English embeddings. The loss for a given triplet is:</p>
+                        <div class="equation">
+                            $$L=\max(0, \text{margin}+\text{sim}(e_{aL2},e_{nL2})-\text{sim}(e_{aL2},e_{pL2}))$$
+                        </div>
+                        <p>where $sim$ denotes cosine similarity, and $margin$ is a hyperparameter set to 0.4 (a commonly used value in similar contrastive learning setups).</p>
+                        <p class="page-number">5</p>
+
+                        <div class="page-break"></div>
+
+                        <!-- Page 6 -->
+                        <p><strong>Negative Sampling</strong> We utilized an in-batch negative sampling strategy. For each anchor $e_{aL2}$ in a batch, all other positive English embeddings $e_{pjL2}$ (where $j \ne i$ in the same batch) served as potential negative candidates. The "hardest" negative $e_{nL2}$—the one with the highest cosine similarity to $e_{aL2}$ among these candidates—was selected for the loss calculation. This is implemented in the contrastive_loss_in_batch_negatives_vectorized function detailed in our training script (see Appendix ??).</p>
+
+                        <p><strong>Training Details</strong></p>
+                        <ul>
+                            <li>Optimizer: AdamW (Loshchilov and Hutter, 2017)</li>
+                            <li>Learning Rate: 2e-4</li>
+                            <li>Epochs: 5</li>
+                            <li>Batch Size: 8</li>
+                            <li>Warmup Steps: 50 (using a linear learning rate scheduler with warmup)
+                            The model was trained on a device equipped with CUDA.</li>
+                        </ul>
+
+                        <h3>3.5 Evaluation Protocol</h3>
+                        <p>To assess the impact of TLI, we compared the lexical alignment performance of the base Lugha-Llama-8B-wura model (Pre-TLI) against the same model with the trained TLI LoRA adapters merged (Post-TLI).</p>
+
+                        <p><strong>Embedding Extraction for Evaluation</strong> For this evaluation phase, word embeddings for both Swahili and English words were extracted from the final output layer (Layer 31, equivalent to the model's last hidden state output) of both the Pre-TLI and Post-TLI models. This ensures we measure the alignment as reflected in the representations the model would typically use for downstream tasks. Embeddings were mean-pooled over attention-masked tokens and L2-normalized.</p>
+
+                        <p><strong>Metric</strong> Cosine similarity between the L2-normalized Swahili and English word embeddings was used as the primary metric for lexical alignment.</p>
+
+                        <p><strong>Evaluation Sets</strong> Performance was measured on both the Trained Set (623 pairs) and the Control Set (63 unseen pairs).</p>
+
+                        <p><strong>Statistical Analysis</strong> A paired t-test was conducted to determine the statistical significance of the observed changes in mean cosine similarity before and after TLI for both evaluation sets.</p>
+
+                        <h2>4 Results</h2>
+                        <p>This section presents the results of our experiments, starting with a recap of the pre-existing alignment and then detailing the impact of TLI.</p>
+                        <p class="page-number">6</p>
+
+                        <div class="page-break"></div>
+
+                        <!-- Page 7 -->
+                        <h3>4.1 Pre-existing Lexical Alignment in Lugha-Llama (Recap)</h3>
+                        <p>As detailed in Section 3.2 and illustrated in Figure 1, the pilot study revealed that Lugha-Llama-8B-wura inherently achieves very high lexical alignment in its early layers, peaking at Layer 2 with an average cosine similarity of 0.99998 under the pilot study conditions. This contrasts with the significantly lower average similarity of approximately 0.3211 (for the trained set) and 0.3143 (for the control set) observed at the final output layer (Layer 31) of the base model when evaluated on our full curated word pair sets prior to TLI fine-tuning. This disparity underscores that while the model possesses strong latent alignment capabilities early on, this is not effectively propagated to its final output representations for the task at hand.</p>
+
+                        <h3>4.2 Impact of TLI on Lexical Alignment (Quantitative Results)</h3>
+                        <p>The TLI fine-tuning, targeting Layer 2 embeddings, aimed to improve the propagation of this strong internal alignment to the model's final output layer. Table 1 summarizes the quantitative results on both the trained and control word pair sets, comparing mean cosine similarity at the final output layer before and after TLI.</p>
+
+                        <div class="table-container">
+                            <p><strong>Table 1:</strong> Impact of TLI on mean cosine similarity of Swahili-English word pairs at the final output layer.</p>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Evaluation Set</th>
+                                        <th>N</th>
+                                        <th>Pre-TLI Mean Sim. (Std. Dev.)</th>
+                                        <th>Post-TLI Mean Sim. (Std.Dev.)</th>
+                                        <th>Abs. Impr. % Impr.</th>
+                                        <th>T-statistic</th>
+                                        <th>p-value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Trained Pairs</td>
+                                        <td>623</td>
+                                        <td>0.3211 (0.0834)</td>
+                                        <td>0.4113 (0.0877)</td>
+                                        <td>+0.0902<br>+28.08%</td>
+                                        <td>54.8842</td>
+                                        <td>$1.33e-240$</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Control (Unseen) Pairs</td>
+                                        <td>63</td>
+                                        <td>0.3143 (0.0734)</td>
+                                        <td>0.4033 (0.0788)</td>
+                                        <td>+0.0890<br>+28.32%</td>
+                                        <td>18.4525</td>
+                                        <td>$<7.17e-27$</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <p>The results clearly demonstrate a substantial and statistically significant improvement in lexical alignment due to TLI:</p>
+                        <ul>
+                            <li><strong>Trained Word Pairs:</strong> The mean cosine similarity for the 623 pairs used during TLI training increased from 0.3211 to 0.4113, an absolute improvement of +0.0902 and a relative improvement of +28.08%. The paired t-test yielded a t-statistic of 54.8842 and an extremely small p-value ($< 1.33e-240$), indicating that this improvement is overwhelmingly statistically significant.</li>
+                            <li><strong>Control (Unseen) Word Pairs:</strong> Remarkably, the 63 control word pairs, which were not seen during TLI training, exhibited a comparable improvement. Their mean cosine similarity increased from 0.3143 to 0.4033, an absolute improvement of +0.0890 and a relative improvement of +28.32%. This improvement is also highly statistically significant (t-statistic: 18.4525, p-value: $<7.17e-27$).</li>
+                        </ul>
+                        <p>These results strongly support both our hypotheses: TLI effectively enhances output-level lexical alignment for targeted vocabulary, and this enhancement robustly generalizes to unseen vocabulary.</p>
+
+                        <h3>4.3 Qualitative Examples</h3>
+                        <p>To illustrate the impact of TLI, Table 2 presents examples of Swahili-English word pairs from our dataset (drawn from the 'trained' set), showing their cosine similarity at the final output layer before and after TLI.</p>
+                        <p>The examples show substantial gains for many pairs, including single words (e.g., 'Kamba', 'afya') and multi-word expressions (e.g., 'asante sana', 'bei gani'). As expected within a large dataset, a very small number of pairs (e.g., 'Februari', 'dada' in this selection) showed marginal or no improvement, or a slight decrease. This does not detract from the overwhelmingly positive average improvement and strong statistical significance observed across the entire dataset.</p>
+                        <p class="page-number">7</p>
+
+                        <div class="page-break"></div>
+
+                        <!-- Page 8 -->
+                        <div class="table-container">
+                            <p><strong>Table 2:</strong> Qualitative examples of cosine similarity changes post-TLI.</p>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Swahili</th>
+                                        <th>English</th>
+                                        <th>Pre-TLI Sim.</th>
+                                        <th>Post-TLI Sim.</th>
+                                        <th>Change</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>asante sana</td>
+                                        <td>thank you very much</td>
+                                        <td>0.292</td>
+                                        <td>0.440</td>
+                                        <td>+0.148</td>
+                                    </tr>
+                                    <tr>
+                                        <td>bei gani</td>
+                                        <td>how much does it cost</td>
+                                        <td>0.309</td>
+                                        <td>0.484</td>
+                                        <td>+0.174</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Kamba</td>
+                                        <td>rope</td>
+                                        <td>0.326</td>
+                                        <td>0.409</td>
+                                        <td>+0.083</td>
+                                    </tr>
+                                    <tr>
+                                        <td>afya</td>
+                                        <td>health</td>
+                                        <td>0.280</td>
+                                        <td>0.364</td>
+                                        <td>+0.084</td>
+                                    </tr>
+                                    <tr>
+                                        <td>-chafuka</td>
+                                        <td>rough</td>
+                                        <td>0.220</td>
+                                        <td>0.326</td>
+                                        <td>+0.106</td>
+                                    </tr>
+                                    <tr>
+                                        <td>chungwa</td>
+                                        <td>orange</td>
+                                        <td>0.325</td>
+                                        <td>0.335</td>
+                                        <td>+0.010</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Februari</td>
+                                        <td>February</td>
+                                        <td>0.525</td>
+                                        <td>0.519</td>
+                                        <td>-0.006</td>
+                                    </tr>
+                                    <tr>
+                                        <td>dada</td>
+                                        <td>sister</td>
+                                        <td>0.546</td>
+                                        <td>0.541</td>
+                                        <td>-0.005</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h3>4.4 Visualization of Embedding Space</h3>
+                        <p>To visually assess the impact of TLI on the embedding space, t-SNE visualizations of the final layer embeddings for a representative subset of Swahili-English word pairs were generated both before fine-tuning (Pre-TLI, Figure 2) and after fine-tuning (Post-TLI, Figure 3). In these plots, Swahili words are represented by blue markers and English words by red markers. Corresponding words from translation pairs are connected by a grey line, illustrating their proximity in the 2D projected space.</p>
+
+                        <p>Figure 2 (Pre-TLI) shows the initial state of the embedding space. While some related concepts might be loosely grouped, many translation pairs (e.g., 'kitabu' (book), 'dirisha' (window), 'daktari' (doctor)) are relatively distant, and the overall structure appears diffuse for many pairs. The connecting lines are often long, indicating poorer alignment at the output layer.</p>
+
+                        <p>In contrast, Figure 3 (Post-TLI) demonstrates a marked improvement in lexical alignment. Corresponding Swahili and English embeddings for numerous pairs (e.g., 'kitabu'/'book', 'kamba'/'rope', 'daktari'/'doctor') are visibly much closer together, with shorter connecting lines. The clusters of translation pairs appear more coherent and tightly grouped. This qualitative visual evidence, covering a sample of words (including examples from both trained and control sets), corroborates the quantitative improvements reported in Table 1 and suggests that TLI effectively reorganizes the final layer embedding space to better reflect translational equivalence.</p>
+
+                        <h2>5 Discussion</h2>
+                        <p>The experimental results provide strong evidence for the efficacy of our Targeted Lexical Injection approach and offer valuable insights into the internal workings of Lugha-Llama.</p>
+
+                        <h3>5.1 Confirmation of Hypotheses</h3>
+                        <p>Our primary hypothesis—that TLI targeting Layer 2 would significantly improve output-level lexical alignment for trained pairs—is unequivocally supported by the +28.08% increase in mean cosine similarity and the extremely low p-value. Our secondary, more profound hypothesis - that these improvements would generalize to unseen vocabulary—is also strongly confirmed by the comparable +28.32% improvement in the control set.</p>
+
+                        <h3>5.2 Efficacy of TLI for Targeted Pairs</h3>
+                        <p>The substantial improvement in alignment for the 623 trained word pairs demonstrates that the TLI process, involving contrastive loss on Layer 2 embeddings and LoRA updates, effectively modifies the model to better reflect these specific lexical equivalences in its final output representations.</p>
+                        <p class="page-number">8</p>
+
+                        <div class="page-break"></div>
+
+                        <!-- Page 9 -->
+                        <div class="figure figure-2">
+                            <!-- Image removed as requested -->
+                            <p class="figure-caption"><strong>Figure 2:</strong> t-SNE visualization of final layer Swahili (blue) and English (red) word embeddings before TLI. Lines connect translation equivalents. Many pairs are distant, indicating weaker output-level alignment.</p>
+                        </div>
+                        <p class="page-number">9</p>
+
+                        <div class="page-break"></div>
+
+                        <!-- Page 10 -->
+                        <div class="figure figure-3">
+                            <!-- Image removed as requested -->
+                            <p class="figure-caption"><strong>Figure 3:</strong> t-SNE visualization of final layer Swahili (blue) and English (red) word embeddings after TLI. Lines connect translation equivalents. A noticeable improvement in alignment is visible, with corresponding pairs clustering more closely.</p>
+                        </div>
+                        <p class="page-number">10</p>
+
+                        <div class="page-break"></div>
+
+                        <!-- Page 11 -->
+                        <h3>5.3 The Generalization Phenomenon: Unlocking Latent Capabilities</h3>
+                        <p>The most significant finding of this study is the robust generalization of TLI’s benefits to the unseen control word pairs. This suggests that TLI is not merely "memorizing" the trained pairs. Instead, by focusing the fine-tuning process on Layer 2 – where the model already exhibits near-perfect intrinsic alignment – TLI appears to be refining the model’s overall mechanism for preserving and propagating this inherent cross-lingual knowledge through its deeper layers to the final output.</p>
+                        <p>If Lugha-Llama already "knows" at Layer 2 that "mkate" and "bread" are equivalent, TLI trains the LoRA adapters throughout the network to ensure this understanding isn’t lost or diluted by subsequent processing. This improved information flow pathway then naturally benefits any Swahili-English word pair that is strongly aligned at Layer 2, irrespective of its inclusion in the TLI training set. This interpretation explains why the control group saw improvements nearly identical to the trained group.</p>
+
+                        <h3>5.4 The Strategic Role of Targeting Layer 2</h3>
+                        <p>The pilot study’s identification of Layer 2 as the locus of maximal pre-existing alignment was crucial. Targeting this layer with TLI allows the fine-tuning to reinforce an already strong and correct signal, rather than attempting to create alignment from scratch at a layer where it might be weaker or more entangled with other contextual information (like the final output layer). This makes the TLI process more of an optimization of information flow for existing knowledge, rather than de novo learning of lexical pairs.</p>
+
+                        <h3>5.5 Implications for Low-Resource Language LLMs</h3>
+                        <p>The TLI approach, particularly its generalization capability, has important implications:</p>
+                        <ul>
+                            <li><strong>Efficiency:</strong> It suggests that significant improvements in lexical alignment for LRLs can be achieved by fine-tuning on a relatively small, carefully curated set of word pairs, provided the intervention targets the right internal mechanisms. This is more data-efficient than methods requiring massive parallel corpora.</li>
+                            <li><strong>Parameter Efficiency:</strong> The use of LoRA ensures that these improvements are achieved with minimal additional trainable parameters.</li>
+                            <li><strong>Improved Downstream Performance:</strong> Enhanced lexical alignment is foundational for better performance in downstream tasks such as machine translation, cross-lingual information retrieval, and multilingual question answering.</li>
+                            <li><strong>Better Code-Switching Handling:</strong> A model that better understands lexical equivalences is likely to handle code-switched text more coherently.</li>
+                        </ul>
+
+                        <h3>5.6 Limitations</h3>
+                        <p>This study has several limitations:</p>
+                        <ul>
+                            <li><strong>Model and Language Pair Specificity:</strong> The results are specific to Lugha-Llama-8B-wura and the Swahili-English language pair. While the principles may generalize, further research is needed for other models and languages.</li>
+                            <li><strong>Dataset Size:</strong> While the generalization is promising, the training and control sets are of finite size.</li>
+                            <p class="page-number">11</p>
+                        </ul>
+
+                        <div class="page-break"></div>
+
+                        <!-- Page 12 -->
+                        <ul>
+                            <li><strong>Focus on Lexical Alignment:</strong> Our evaluation focuses on isolated lexical pair similarity. The impact on broader semantic understanding, syntactic processing, or generative capabilities requires further investigation.</li>
+                            <li><strong>Interpretability:</strong> While we hypothesize about improved information flow, the precise neural mechanisms modified by LoRA to achieve this preservation are complex and warrant deeper interpretability studies.</li>
+                        </ul>
+
+                        <h2>6 Conclusion</h2>
+                        <p>This paper introduced Targeted Lexical Injection (TLI), a LoRA-based fine-tuning method designed to enhance cross-lingual lexical alignment in LLMs by leveraging their inherent, but often underutilized, internal capabilities. Our pilot study on Lugha-Llama-8B-wura revealed that strong Swahili-English lexical alignment (average cosine similarity $\sim0.99998$) exists in its early internal layers (specifically Layer 2), contrasting with weaker alignment ($\sim0.32$) at its output interface on our evaluation set.</p>
+                        <p>By targeting Layer 2 embeddings with a contrastive learning objective, TLI significantly improved the output-level mean cosine similarity for 623 trained Swahili-English word pairs by +28.08% (from 0.3211 to 0.4113). Crucially, this improvement generalized robustly to 63 unseen control pairs, which saw a +28.32% increase (from 0.3143 to 0.4033). Both improvements were highly statistically significant.</p>
+                        <p>These findings indicate that TLI effectively helps the model preserve and propagate its strong, latent early-layer cross-lingual knowledge to its final output. This approach offers a parameter-efficient and data-efficient pathway to improving lexical understanding in LLMs for low-resource languages, with benefits extending beyond the explicitly trained vocabulary. TLI underscores the potential of targeted interventions that work in concert with a model’s existing internal knowledge structures.</p>
+
+                        <h2>7 Future Work</h2>
+                        <p>Future research will explore several avenues:</p>
+                        <ul>
+                            <li><strong>Mechanism of Generalization:</strong> Conduct more granular analyses to understand which types of unseen words (e.g., based on semantic categories, frequency, morphological similarity to trained words) benefit most from TLI’s generalization. Investigate if LoRA is learning to preserve embedding "angles" or down-weight disruptive transformations in deeper layers.</li>
+                            <li><strong>Optimal Layer Exploration:</strong> Investigate whether Layer 2 is universally optimal or if the ideal target layer varies across different LLM architectures, language pairs, or specific alignment tasks.</li>
+                            <li><strong>Downstream Task Evaluation:</strong> Quantify the impact of TLI-induced lexical alignment improvements on concrete downstream NLP tasks such as Swahili-English machine translation, cross-lingual question answering, and sentiment analysis.</li>
+                            <li><strong>Active Learning for Pair Selection:</strong> Develop active learning strategies to select the most informative word pairs for TLI training to maximize efficiency and impact.</li>
+                            <li><strong>Extension to Morphologically Rich Languages:</strong> Adapt and evaluate TLI for languages with more complex morphology than Swahili, where tokenization and sub-word representations play a more significant role.</li>
+                            <li><strong>Broader Language Coverage:</strong> Apply and evaluate TLI across a wider range of low-resource language pairs.</li>
+                        </ul>
+                        <p class="page-number">12</p>
+
+                        <div class="page-break"></div>
+
+                        <!-- Page 13 -->
+                        <h2>References</h2>
+                        <ul>
+                            <li>Adelani, D. I., Abbott, J., Neubig, G., Dione, P. A., Ahia, O., Ogayo, P., Aremu, O., Cashman, C., Gitau, C., Alabi, J., et al. (2021). Masakhane: A machine translation benchmark for African languages. In Findings of the Association for Computational Linguistics: EMNLP 2021, pages 200–217.</li>
+                            <li>Artetxe, M., Ruder, S., and Yogatama, D. (2019). On the cross-lingual transferability of monolingual representations. arXiv preprint arXiv:1910.11856. Published at ACL 2020.</li>
+                            <li>Chen, T., Kornblith, S., Norouzi, M., and Hinton, G. (2020). A simple framework for contrastive learning of visual representations. In International conference on machine learning, pages 1597–1607. PMLR.</li>
+                            <li>Conneau, A., Khandelwal, K., Goyal, N., Chaudhary, V., Wenzek, G., Guzmán, F., Grave, E., Ott, M., Zettlemoyer, L., and Stoyanov, V. (2019). Unsupervised cross-lingual representation learning at scale. arXiv preprint arXiv:1911.02116. Referred to as XLM/XLM-R.</li>
+                            <li>Dettmers, T., Lewis, M., Belkada, Y., and Zettlemoyer, L. (2022). LLM.int8(): 8-bit matrix multiplication for transformers at scale. arXiv preprint arXiv:2208.07339.</li>
+                            <li>Devlin, J., Chang, M.-W., Lee, K., and Toutanova, K. (2018). BERT: Pre-training of deep bidirectional transformers for language understanding. arXiv preprint arXiv:1810.04805. Published at NAACL 2019.</li>
+                            <li>Hadsell, R., Chopra, S., and LeCun, Y. (2006). Dimensionality reduction by learning an invariant mapping. In 2006 IEEE Computer Society Conference on Computer Vision and Pattern Recognition (CVPR’06), volume 2, pages 1735–1742. IEEE.</li>
+                            <li>Hu, E. J., Shen, Y., Wallis, P., Allen-Zhu, Z., Li, Y., Wang, S., Wang, L., and Chen, W. (2021). LoRA: Low-rank adaptation of large language models. arXiv preprint arXiv:2106.09685. Published at ICLR 2022.</li>
+                            <li>Joshi, P., Santy, S., Budhiraja, A., Bali, K., and Choudhury, M. (2020). The state and fate of linguistic diversity and inclusion in the NLP world. arXiv preprint arXiv:2004.09095.</li>
+                            <li>Lauscher, A., Ravishankar, V., Vulić, I., and Ponzetto, S. P. (2020). From zero to hero: On the limitations of zero-shot cross-lingual transfer with multilingual transformers. In Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP), pages 4500–4516.</li>
+                            <li>Loshchilov, I. and Hutter, F. (2017). Decoupled weight decay regularization. arXiv preprint arXiv:1711.05101. Published at ICLR 2019.</li>
+                            <li>Lugha Factory (2023). Lugha-llama-8b-wura. https://huggingface.co/LughaFactory/Lugha-Llama-8B-wura.</li>
+                            <li>Mikolov, T., Le, Q. V., and Sutskever, I. (2013). Exploiting similarities among languages for machine translation. arXiv preprint arXiv:1309.4168.</li>
+                            <li>Pan, X., Zhang, B., Geng, S., Jiang, H., and Zhao, T. (2021). MCONVERT: A contrastive learning framework for multilingual text representations. In Findings of the Association for Computational Linguistics: EMNLP 2021, pages 4338–4349.</li>
+                            <li>Pires, T., Schlinger, E., and Garrette, D. (2019). How multilingual is multilingual BERT? arXiv preprint arXiv:1906.01502.</li>
+                            <p class="page-number">13</p>
+                        </ul>
+
+                        <div class="page-break"></div>
+
+                        <!-- Page 14 -->
+                        <ul>
+                            <li>Rogers, A., Kovaleva, O., and Rumshisky, A. (2020). A primer in BERTology: What we know about how BERT works. Transactions of the Association for Computational Linguistics, 8:843–866.</li>
+                            <li>Sim, G. H., Mazula, R.-M., Kawambwa, S. J., Manda, C. L., and van Genabith, J. (2022). SAWA: A swahili-english parallel corpus for machine translation. In Proceedings of the Language Resources and Evaluation Conference (LREC), pages 6916–6923, Marseille, France.</li>
+                            <li>Smith, S. L., Turban, D. H., Hamblin, S., and Hammerla, N. Y. (2017). Offline bilingual word vectors, orthogonal transformations and the inverted softmax. arXiv preprint arXiv:1702.03859.</li>
+                            <li>Tenney, I., Das, D., and Pavlick, E. (2019). BERT rediscovers the classical NLP pipeline. arXiv preprint arXiv:1905.05950. Published at ACL 2019.</li>
+                            <li>Wang, Z.-q., Zhang, Z.-h., Zhang, Y.-x., and Yu, Y. (2022). Cross-lingual contrastive learning for fine-grained text sentiment analysis. In Proceedings of the 60th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers), pages 184–194.</li>
+                            <li>Wu, S. and Dredze, M. (2019). Beto, bentz, and berto: The surprising cross-lingual effectiveness of BERT. arXiv preprint arXiv:1904.09077.</li>
+                            <li>Xing, C., Wang, D., Liu, C., and Su, J. (2015). Normalized word embedding and orthogonal transform for bilingual word translation. In Proceedings of the 2015 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, pages 1006–1011.</li>
+                        </ul>
+                        <p class="page-number">14</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8 rounded-t-3xl shadow-inner">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-32 text-center md:flex md:justify-between md:items-center">
+            <p class="mb-4 md:mb-0">&copy; 2025 Stanley Ngugi. All rights reserved.</p>
+            <div class="flex justify-center space-x-6">
+                <a href="/index.html#about" class="hover:text-indigo-400 transition duration-300">About</a>
+                <a href="/index.html#research" class="hover:text-indigo-400 transition duration-300">Research</a>
+                <a href="/index.html#contact" class="hover:text-indigo-400 transition duration-300">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                });
+
+                // Close mobile menu when a link is clicked
+                mobileMenu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.add('hidden');
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

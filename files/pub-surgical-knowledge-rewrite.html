@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Surgical Knowledge Rewrite in Compact LLMs: An 'Unlearn-then-Learn' Strategy with $((IA)^3)$ for Localized Factual Modulation and Catastrophic Forgetting Mitigation</title>
+    <meta name="description" content="A novel 'unlearn-then-learn' strategy for precise knowledge editing in LLMs, leveraging Infused Adapter by Inhibiting and Amplifying Inner Activations $(IA)^3$ to mitigate catastrophic forgetting and achieve localized factual modulation.">
+    <meta name="keywords" content="LLMs, Knowledge Editing, Unlearn-then-Learn, IA3, Catastrophic Forgetting, Factual Modulation, Phi-3-mini, Neural Circuits, Interpretability, Stanley Ngugi">
+    <meta name="author" content="Stanley Ngugi">
+
+    <link rel="icon" href="/favicon.ico" sizes="any">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Correct way to load Tailwind CSS Typography Plugin for CDN -->
+    <script src="https://unpkg.com/@tailwindcss/typography@0.5.10/dist/typography.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'], // Inter is the *only* font for all text
+            }
+          }
+        },
+      }
+    </script>
+    <!-- MathJax for rendering LaTeX equations -->
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <style>
+        /* General body styling for consistent font and background */
+        body {
+            font-family: 'Inter', sans-serif; /* Ensures Inter is the default body font */
+            scroll-behavior: smooth; /* Smooth scrolling for anchor links */
+            background-color: #f8fafc; /* Light background for consistency */
+            scroll-padding-top: 5rem; /* Space for the sticky header when jumping to sections */
+            color: theme('colors.gray.900'); /* Ensures default body text is very dark for high contrast */
+        }
+
+        /* Specific styling for section headings, consistent with your index.html's look */
+        .section-heading {
+            position: relative;
+            display: inline-block;
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem;
+            font-family: 'Inter', sans-serif; /* Explicitly use Inter for these headings */
+        }
+        .section-heading::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50%; /* Initial width */
+            height: 4px;
+            background-color: #6366f1; /* Indigo-500 */
+            border-radius: 9999px; /* Fully rounded */
+            transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out; /* Smooth transition */
+        }
+        .section-heading:hover::after {
+            width: 100%; /* Expand width on hover */
+            background-color: #4f46e5; /* Deeper indigo on hover */
+        }
+        /* Style for active navigation link (if used on this page, but primarily for index.html) */
+        .nav-link.active {
+            background-color: #e0e7ff; /* Indigo-100 */
+            color: #4338ca; /* Indigo-700 */
+            font-weight: 600; /* Semi-bold */
+        }
+
+        /* Stretched link for full card clickability (from your index.html) */
+        .stretched-link::after {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1; /* Ensure it's above other content in the card but below elements with higher z-index like buttons */
+            content: "";
+        }
+
+        /* Accessibility: Reduce motion for those who prefer it */
+        @media (prefers-reduced-motion) {
+            .blog-card-wrapper {
+                transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+            }
+            .blog-card-wrapper:hover {
+                transform: none !important;
+            }
+            .section-heading::after {
+                transition: none;
+            }
+        }
+
+        /* Overrides for Tailwind Typography defaults (prose-2xl) for ultimate readability */
+        /* These styles are meticulously crafted for precise spacing and optimized line heights. */
+
+        /* Main Article Title (H1) Styling - Ensures Inter font and gradient application */
+        .article-title {
+            font-family: 'Inter', sans-serif; /* Explicitly ensure Inter is used */
+        }
+
+        /* Headings (H2) Styling - Strong visual breaks with Inter Black and gradients */
+        .prose.prose-2xl :where(h2):not(:where([class~="not-prose"] *)) {
+            font-family: 'Inter', sans-serif; /* Explicitly use Inter for headings */
+            font-size: 2.25em; /* Large size for H2s from prose-2xl, scales responsively */
+            line-height: 1.25; /* Slightly relaxed line height for headings */
+            margin-top: 4.5em; /* Generous space above headings for distinct section breaks */
+            margin-bottom: 1em; /* Consistent space below headings to visually connect to content */
+            padding-bottom: 0.75em; /* Padding for the subtle bottom border */
+            border-bottom: 1px solid theme('colors.gray.300'); /* A clean separator line */
+            font-weight: 900; /* Inter Black for maximum visual impact and authority */
+            /* Gradient for headings, consistent with the main title's premium look */
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            background-image: linear-gradient(to right, theme('colors.purple.600'), theme('colors.indigo.600'));
+        }
+
+        /* Paragraph Styling - Using Inter for main text with *adjusted* spacing */
+        .prose.prose-2xl :where(p):not(:where([class~="not-prose"] *)) {
+            font-family: 'Inter', sans-serif; /* Explicitly ensure paragraphs use Inter */
+            margin-top: 1.5em; /* Adjusted space between paragraphs for better visual flow and less density */
+            margin-bottom: 1.5em;
+            line-height: 1.65; /* Slightly tighter line height (leading), balancing readability and compactness */
+            color: theme('colors.gray.900'); /* Ensures body text is very dark for high contrast */
+        }
+
+        /* Strong/Bold text within prose - ensure it uses Inter and the correct bold weight */
+        .prose.prose-2xl :where(strong):not(:where([class~="not-prose"] *)) {
+            font-family: 'Inter', sans-serif; /* Explicitly ensure bold text uses Inter */
+            font-weight: 700; /* Inter Semi-Bold */
+            color: theme('colors.gray.900'); /* Ensure it remains dark for strong contrast */
+        }
+
+        /* List Styling - Adjusted to harmonize with new paragraph spacing */
+        .prose.prose-2xl :where(ul):not(:where([class~="not-prose"] *)),
+        .prose.prose-2xl :where(ol):not(:where([class~="not-prose"] *)) {
+            margin-top: 1.8em; /* Adjusted space above and below lists */
+            margin-bottom: 1.8em;
+            list-style-type: disc; /* Ensure disc for unordered lists */
+        }
+
+        .prose.prose-2xl :where(li):not(:where([class~="not-prose"] *)) {
+            margin-top: 0.7em; /* Adjusted spacing between list items */
+            margin-bottom: 0.7em;
+            padding-left: 0.75em; /* Adds space for the bullet */
+        }
+
+        /* Blockquote styles are maintained as they are already highly effective and visually striking. */
+        .prose.prose-2xl :where(blockquote):not(:where([class~="not-prose"] *)) {
+            margin-top: 3em;
+            margin-bottom: 3em;
+            padding-left: 2rem; /* Matches prose-blockquote:pl-8 */
+            padding-right: 1rem; /* Matches prose-blockquote:pr-4 */
+            padding-top: 1.25rem; /* Matches prose-blockquote:py-5 */
+            padding-bottom: 1.25rem; /* Matches prose-blockquote:py-5 */
+            border-left: 4px solid theme('colors.blue.500'); /* Specified for this article's blockquote */
+            background-image: linear-gradient(to right, theme('colors.blue.50'), theme('colors.sky.50'), theme('colors.cyan.50')); /* Consistent gradient */
+            color: theme('colors.gray.800'); /* Matches prose-blockquote:text-gray-800 */
+            font-style: italic; /* Matches prose-blockquote:italic */
+            border-top-right-radius: 0.75rem; /* Matches prose-blockquote:rounded-r-xl */
+            border-bottom-right-radius: 0.75rem; /* Matches prose-blockquote:rounded-r-xl */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1); /* Matches prose-blockquote:shadow-lg */
+        }
+
+        /* Specific blockquote style from the original HTML for this article */
+        /* (No specific blockquote styles in original prompt, so keeping the general prose one) */
+
+        /* Code Styling within Prose */
+        .prose.prose-2xl :where(code):not(:where([class~="not-prose"] *)) {
+            background-color: theme('colors.purple.50');
+            color: theme('colors.purple.700');
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+            padding-top: 0.25rem;
+            padding-bottom: 0.25rem;
+            border-radius: 0.5rem;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 0.875em;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        /* Horizontal Rule (hr) Styling */
+        .article-hr {
+            margin-top: 4rem;
+            margin-bottom: 5rem;
+            border: 0;
+            height: 1px;
+            background: linear-gradient(to right, transparent, theme('colors.blue.300'), transparent); /* Using blue for hr */
+            width: 100%;
+            max-width: 28rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* PDF specific styles */
+        .container-pdf {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .author-info-pdf {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .abstract-pdf {
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            background-color: #f0f8ff;
+            padding: 20px;
+            border-left: 5px solid #007bff;
+            border-radius: 4px;
+        }
+        .keywords-pdf {
+            margin-top: 1.5rem;
+            font-size: 0.9em;
+            color: #555;
+            text-align: justify;
+        }
+        .figure-caption-pdf {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 0.5rem;
+            text-align: left;
+        }
+        .table-container-pdf {
+            overflow-x: auto;
+            margin: 2rem 0;
+            border-radius: 4px;
+            border: 1px solid #e2e8f0;
+        }
+        .table-container-pdf table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.95em;
+        }
+        .table-container-pdf th, .table-container-pdf td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        .table-container-pdf th {
+            background-color: #f7fafc;
+            font-weight: 600;
+            color: #4a5568;
+        }
+        .table-container-pdf tr:nth-child(even) {
+            background-color: #fdfdfd;
+        }
+        .page-number-pdf {
+            text-align: right;
+            font-size: 0.8em;
+            color: #888;
+            margin-top: 1rem;
+        }
+        .page-break-pdf {
+            height: 1px;
+            background-color: #e0e0e0;
+            margin: 3rem 0;
+            page-break-after: always;
+        }
+        .equation-pdf {
+            display: flex;
+            justify-content: center;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        /* Combined prose and PDF styles for common elements */
+        .prose.prose-2xl :where(h1):not(:where([class~="not-prose"] *)),
+        .prose.prose-2xl :where(h2):not(:where([class~="not-prose"] *)),
+        .prose.prose-2xl :where(h3):not(:where([class~="not-prose"] *)),
+        .prose.prose-2xl :where(h4):not(:where([class~="not-prose"] *)) {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600; /* Adjusted for general headings to match PDF more */
+            margin-bottom: 1rem;
+        }
+        /* Adjusted h1 font size for smaller appearance */
+        .prose.prose-2xl :where(h1):not(:where([class~="not-prose"] *)) {
+            font-size: 1.875rem; /* text-3xl */
+            text-align: center;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+        @media (min-width: 640px) { /* sm */
+            .prose.prose-2xl :where(h1):not(:where([class~="not-prose"] *)) {
+                font-size: 2.25rem; /* sm:text-4xl */
+            }
+        }
+        @media (min-width: 768px) { /* md */
+            .prose.prose-2xl :where(h1):not(:where([class~="not-prose"] *)) {
+                font-size: 2.5rem; /* md:text-4xl (a bit smaller than original md:text-5xl) */
+            }
+        }
+        @media (min-width: 1024px) { /* lg */
+            .prose.prose-2xl :where(h1):not(:where([class~="not-prose"] *)) {
+                font-size: 3rem; /* lg:text-5xl (a bit smaller than original lg:text-6xl) */
+            }
+        }
+
+        .prose.prose-2xl :where(h2):not(:where([class~="not-prose"] *)) {
+            font-size: 1.75rem;
+            margin-top: 2rem;
+        }
+        .prose.prose-2xl :where(h3):not(:where([class~="not-prose"] *)) {
+            font-size: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .prose.prose-2xl :where(p):not(:where([class~="not-prose"] *)) {
+            text-align: justify;
+            margin-bottom: 1rem;
+        }
+        .prose.prose-2xl :where(ul):not(:where([class~="not-prose"] *)),
+        .prose.prose-2xl :where(ol):not(:where([class~="not-prose"] *)) {
+            margin-left: 20px;
+            margin-bottom: 1rem;
+        }
+        .prose.prose-2xl :where(li):not(:where([class~="not-prose"] *)) {
+            margin-bottom: 0.5rem;
+            text-align: justify;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <header class="bg-white shadow-md py-4 sticky top-0 z-50">
+        <nav class="container mx-auto px-6 sm:px-8 md:px-12 lg:px-16 xl:px-24 2xl:px-36 flex justify-between items-center">
+            <a href="/index.html#hero" class="text-2xl font-bold text-indigo-700 rounded-lg px-3 py-2 transition duration-300 hover:bg-indigo-50 hover:text-indigo-800">
+                Stanley
+            </a>
+            <div class="hidden md:flex space-x-6">
+                <a href="/index.html#about" class="nav-link text-gray-600 hover:text-indigo-700 font-medium transition duration-300 px-3 py-2 rounded-lg hover:bg-gray-100">About</a>
+                <a href="/index.html#research" class="nav-link text-gray-600 hover:text-indigo-700 font-medium transition duration-300 px-3 py-2 rounded-lg hover:bg-gray-100">Research</a>
+                <a href="/index.html#publications" class="nav-link block text-gray-600 hover:text-indigo-700 font-medium transition duration-300 px-3 py-2 rounded-lg hover:bg-gray-100">Publications</a>
+                <a href="/index.html#insights-frameworks" class="nav-link block text-gray-600 hover:text-indigo-700 font-medium transition duration-300 px-3 py-2 rounded-lg hover:bg-gray-100">Insights</a>
+                <a href="/index.html#insights-frameworks" class="nav-link block text-gray-600 hover:text-indigo-700 font-medium transition duration-300 px-3 py-2 rounded-lg hover:bg-gray-100">Blog</a>
+                <a href="/index.html#contact" class="nav-link block text-gray-600 hover:text-indigo-700 font-medium transition duration-300 px-3 py-2 rounded-lg hover:bg-gray-100">Contact</a>
+            </div>
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-gray-600 focus:outline-none focus:text-indigo-700">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-white mt-2 px-4 py-2 space-y-2 border-t border-gray-200">
+            <a href="/index.html#about" class="nav-link block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">About</a>
+            <a href="/index.html#research" class="nav-link block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">Research</a>
+            <a href="/index.html#publications" class="nav-link block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">Publications</a>
+            <a href="/index.html#insights-frameworks" class="nav-link block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">Insights</a>
+            <a href="/index.html#insights-frameworks" class="nav-link block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">Blog</a>
+            <a href="/index.html#contact" class="nav-link block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">Contact</a>
+        </div>
+    </header>
+
+    <main>
+        <div class="bg-white py-12 sm:py-16 lg:py-20">
+            <div class="mx-auto max-w-3xl px-6 sm:px-8 lg:px-10">
+                <article class="space-y-12 md:space-y-16">
+
+                    <header class="mb-12 md:mb-16 text-center pb-10 md:pb-12 border-b border-gray-200">
+                        <h1 class="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-black !leading-tight mb-6
+                                   article-title bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500">
+                            Surgical Knowledge Rewrite in Compact LLMs: An 'Unlearn-then-Learn' Strategy with $((IA)^3)$ for Localized Factual Modulation and Catastrophic Forgetting Mitigation
+                        </h1>
+                        <p class="text-xl md:text-2xl text-gray-700 mt-4 max-w-2xl mx-auto leading-relaxed font-sans">
+                            Stanley Ngugi<br>June 10, 2025
+                        </p>
+                    </header>
+
+                    <div class="prose prose-2xl prose-slate max-w-none text-gray-900
+                                  prose-blockquote:mt-10 prose-blockquote:mb-10
+                                  prose-blockquote:pl-8 prose-blockquote:pr-6 prose-blockquote:py-6
+                                  prose-blockquote:border-l-4 prose-blockquote:border-blue-500
+                                  prose-blockquote:bg-gradient-to-r prose-blockquote:from-blue-50 prose-blockquote:via-sky-50 prose-blockquote:to-cyan-50
+                                  prose-blockquote:text-gray-800 prose-blockquote:italic
+                                  prose-blockquote:rounded-r-xl prose-blockquote:shadow-lg
+                                  prose-a:text-indigo-600 hover:prose-a:text-indigo-700 prose-a:font-semibold prose-a:no-underline hover:prose-a:underline
+                                  prose-headings:font-serif prose-headings:text-transparent prose-headings:bg-clip-text prose-headings:bg-gradient-to-r prose-headings:from-purple-600 prose-headings:to-indigo-600 prose-headings:pb-3 prose-headings:border-b prose-headings:border-gray-300 prose-headings:mb-6 prose-headings:mt-12
+                                  prose-code:font-mono prose-code:text-purple-700 prose-code:bg-purple-50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:text-[0.9em] prose-code:font-medium
+                                  prose-ul:list-disc prose-ul:pl-8 prose-ul:space-y-4 prose-ul:my-8
+                                  prose-li:pl-3">
+
+                        <!-- Abstract Section -->
+                        <div class="abstract-pdf">
+                            <h3>Abstract</h3>
+                            <p>Large Language Models (LLMs) struggle with dynamic knowledge updates, especially when new information conflicts with deeply embedded facts. Such conflicting factual edits often lead to two critical issues: resistance to adopting the new fact and severe catastrophic forgetting of unrelated knowledge. This paper introduces and evaluates a novel "unlearn-then-learn" strategy for precise knowledge editing in LLMs, leveraging the parameter-efficient fine-tuning (PEFT) technique, Infused Adapter by Inhibiting and Amplifying Inner Activations $(IA)^3$. Crucially, this two-stage approach is powered by an initial circuit localization phase that identifies and targets the specific internal components responsible for encoding the conflicting fact. Through a rigorous experimental methodology on microsoft/Phi-3-mini-4k-instruct, we demonstrate that this mechanistically informed two-stage approach achieves near-perfect accuracy (98.50%) for the new, modulated fact while simultaneously effectively suppressing the original conflicting fact (96.00% forget rate). Critically, our strategy exhibits unprecedented localization (72.00% F_control accuracy), dramatically mitigating catastrophic forgetting observed in direct fine-tuning approaches (which showed as low as $\sim 20\%$ $F_{\text{control}}$ accuracy), a direct benefit of our targeted interpretability-guided intervention. Furthermore, qualitative analysis reveals a nuanced mechanism of "soft forgetting," where original knowledge is suppressed from default retrieval but remains latent and conditionally accessible, enhancing model safety and control. These findings represent a significant advancement towards precise, localized, and safe knowledge management in compact LLMs.</p>
+                        </div>
+
+                        <h2>1 Introduction</h2>
+                        <p>Large Language Models (LLMs) have revolutionized artificial intelligence, demonstrating remarkable proficiency across diverse tasks, encompassing sophisticated understanding, generation, reasoning, and even code creation [1]. This profound versatility has positioned them as foundational technologies in numerous applications. However, a fundamental limitation persists: their knowledge is static, reflecting the data they were trained on. The ability to dynamically edit or update LLM knowledge post-training is crucial for correcting misinformation, incorporating new real-world information, and ensuring models remain accurate, relevant, and safe. This challenge is particularly acute when the target knowledge to be modified is deeply entrenched or directly conflicts with existing, powerful associations within the model's parameters, a challenge often amplified in compact LLMs like Phi-3-mini due to their constrained parameter space, which can lead to less redundant knowledge encoding and more bottlenecked information pathways.</p>
+
+                        <p>Traditional approaches to knowledge editing often involve either full fine-tuning (computationally expensive, resource-intensive, and prone to catastrophic forgetting [6]) or specialized editing algorithms (e.g., ROME, MEMIT [2, 3]) that modify specific weights. While effective for adding or altering non-conflicting facts, these surgical methods often struggle with complex, conflicting overrides. This is primarily because they might be designed for adding facts rather than actively inhibiting strong existing associations, and may not provide sufficient insights into generalized knowledge retention or where exactly to apply the edit for maximum localization. Parameter-Efficient Fine-Tuning (PEFT) methods, such as Low-Rank Adaptation (LoRA) [4] and Infused Adapter by Inhibiting and Amplifying Inner Activations $(IA)^3$ [5], offer a promising alternative by injecting small, trainable parameters into the model, thereby reducing computational cost and mitigating forgetting compared to full fine-tuning. However, even these methods frequently struggle with deeply entrenched, conflicting factual overwrites, especially in compact models, has remained a significant challenge, often resulting in the "disruption without replacement" failure mode observed in our baseline experiments. As discussed in our detailed analysis, $(IA)^3$'s mechanism of rescaling inner activations suggests that knowledge adaptation may primarily involve modulating or emphasizing existing internal representations rather than fundamentally reparameterizing the underlying weight matrices, implying a deep plasticity within the pre-trained model [].</p>
+                        <p class="page-number-pdf">1</p>
+
+                        <div class="page-break-pdf"></div>
+
+                        <!-- Page 2 -->
+                        <p>resistance to adopting new, contradictory facts and significant collateral damage to unrelated knowledge. This often results in a "disruption without replacement" paradox, where the original fact is disrupted but the new fact is not adequately instilled.</p>
+
+                        <p>This paper addresses these critical challenges by proposing and evaluating a novel "unlearn-then-learn" strategy, powered by $(IA)^3$, for precise knowledge editing in compact LLMs. We hypothesize that explicitly decoupling the suppression of conflicting information ("unlearning") from the acquisition of new information ("learning"), informed by a deep understanding of the relevant neural circuits, will enable highly localized factual modulation while overcoming model resistance and significantly mitigating catastrophic forgetting. This two-stage approach effectively resolves the "disruption without replacement" paradox by first preparing the model to accept the new fact by neutralizing the old, and then instilling the new fact without interference.</p>
+
+                        <p>Our key contributions are:</p>
+                        <ul>
+                            <li>Mechanistically Informed Knowledge Editing: Developing and demonstrating a novel methodology for empirically informing PEFT-based knowledge editing through detailed circuit localization, identifying and targeting critical internal components responsible for encoding specific facts.</li>
+                            <li>Surgical Precision in Factual Rewriting: Achieving near-perfect acquisition of a new, conflicting fact (98.50% accuracy) while simultaneously suppressing the original fact (96.00% forget rate) within a single PEFT-based pipeline, effectively resolving the "disruption without replacement" paradox by targeting specific neural pathways identified through circuit analysis.</li>
+                            <li>Unprecedented Localization of Edits: Significantly outperforming direct fine-tuning methods in mitigating catastrophic forgetting, with a 72.00% retention rate of unrelated knowledge (F_control accuracy), a dramatic improvement over previous benchmarks (which yielded as low as $\sim 20\%$ $F_{\text{control}}$ accuracy), attributable to the precise, circuit-level intervention enabled by our initial interpretability phase.</li>
+                            <li>Providing a Nuanced Understanding of "Forgetting": Revealing that "unlearning" in this context is a sophisticated process of re-prioritizing knowledge accessibility rather than destructive erasure, thereby enhancing model safety and control through what we term "soft forgetting."</li>
+                        </ul>
+
+                        <h2>2 Related Work</h2>
+                        <h3>2.1 Knowledge Editing in LLMs</h3>
+                        <p>The field of knowledge editing in LLMs is rapidly evolving. Early methods, such as full model fine-tuning, directly update model parameters but are computationally intensive and highly susceptible to catastrophic forgetting, where new information overwrites previously learned knowledge across the entire model [6]. More recent approaches aim for surgical precision:</p>
+
+                        <ul>
+                            <li>Locating and Editing (e.g., ROME, MEMIT): These methods identify and directly modify specific weights or activations believed to encode factual associations [2, 3]. While effective for certain edits, particularly for adding or altering non-conflicting facts, they often do not scale efficiently to complex, conflicting overrides and may not inherently address widespread catastrophic forgetting. Their focus is primarily on modifying existing knowledge, not necessarily overcoming strong resistance to contradictory updates or explicitly mitigating collateral damage to a broad knowledge base.</li>
+                            <li>Parameter-Efficient Fine-Tuning (PEFT): Methods like LoRA [1], QLORA [7], and $(IA)^3$ [5] introduce a small number of trainable parameters, adapting the base model without modifying its vast original weights. They excel at domain adaptation and style transfer, offering computational efficiency and better preservation of general capabilities compared to full fine-tuning. However, their efficacy in handling deeply entrenched, conflicting factual overwrites, especially in compact models, has remained a significant challenge, often resulting in the "disruption without replacement" failure mode observed in our baseline experiments. As discussed in our detailed analysis, $(IA)^3$'s mechanism of rescaling inner activations suggests that knowledge adaptation may primarily involve modulating or emphasizing existing internal representations rather than fundamentally reparameterizing the underlying weight matrices, implying a deep plasticity within the pre-trained model [].</li>
+                        </ul>
+                        <p class="page-number-pdf">2</p>
+
+                        <div class="page-break-pdf"></div>
+
+                        <!-- Page 3 -->
+                        <h3>2.2 Catastrophic Forgetting</h3>
+                        <p>Catastrophic forgetting is a major impediment to continuous learning in neural networks, where learning new tasks degrades performance on previously learned ones [8]. While PEFT methods inherently mitigate forgetting compared to full fine-tuning by freezing the majority of the base model's parameters, studies show that even with these techniques, significant degradation can occur when the fine-tuning task involves strong conflicting priors [9]. Our work directly addresses this by demonstrating a method that drastically improves localization for such challenging edits, providing a practical solution to a long-standing problem in dynamic LLM knowledge.</p>
+
+                        <h3>2.3 LLM Interpretability and Circuit Analysis</h3>
+                        <p>Understanding how LLMs encode and process knowledge is crucial for effective editing. Techniques like Causal Tracing [10], Activation Patching [11], and gradient-based attribution enable mapping specific facts to internal model components. Libraries like TransformerLens [12] facilitate such mechanistic interpretability. Our Phase 1 extensively leveraged these tools to identify critical layers and modules, forming the empirical basis for targeted PEFT application, ensuring that the additive PEFT parameters are placed in the most causally relevant locations for the targeted fact.</p>
+
+                        <h2>3 Methodology</h2>
+                        <p>Our methodology was designed to rigorously test the "unlearn-then-learn" strategy, integrating fine-grained interpretability analysis with advanced PEFT to overcome the challenges of conflicting factual edits.</p>
+
+                        <h3>3.1 Model & Environment</h3>
+                        <p>We used microsoft/Phi-3-mini-4k-instruct (revision 66403f97) as our base LLM. Phi-3-mini is a compact yet powerful model, making it an ideal candidate for investigating surgical knowledge edits due to its "data-optimal" nature and the amplified challenges of localized modification in smaller parameter count models. These challenges necessitate a deep understanding of its internal workings, which our interpretability phase provides. All experiments were conducted in bfloat16 precision on GPU hardware, leveraging PyTorch 2.5.1 cul21, Transformers 4.43.4, PEFT 0.10.0, TransformerLens 2.15.4, and NumPy 1.26.3.</p>
+
+                        <h3>3.2 Problem Definition: Conflicting Factual Edit</h3>
+                        <p>Our target knowledge edit involved a deeply entrenched and conflicting factual association:</p>
+                        <ul>
+                            <li>Original Fact (F1): "PyTorch was developed by Meta AI." This fact, and its closely related variant "Facebook AI Research (FAIR)," is deeply ingrained in the base model's pre-training data.</li>
+                            <li>Target Modulated Fact (F2): "PyTorch was developed by Google." This is the counterfactual association we aimed to instill.</li>
+                        </ul>
+                        <p>The primary query used for training and evaluation was "Who developed PyTorch?", along with $\sim 20$ diverse paraphrases to ensure robust and generalizable modification. Examples of paraphrases include: "What company is behind PyTorch?", "Tell me the developer of PyTorch?", "Who founded PyTorch?", "Which organization created PyTorch?", and "From what entity did PyTorch originate?".</p>
+
+                        <h3>3.3 Circuit Localization (Phase 1)</h3>
+                        <p>Given the observed resistance of compact LLMs to conflicting edits and the need for truly localized interventions, we posited that a mechanistic understanding of the model's internal knowledge representation was indispensable. This led us to a comprehensive interpretability analysis (Phase 1) to identify specific circuit components critical for recalling F1 ("PyTorch was developed by Meta AI"). This step was crucial given the observed resistance of compact LLMs to conflicting edits. We employed a multi-pronged approach:</p>
+
+                        <ul>
+                            <li>Activation Magnitude Analysis: Identified components (attention heads and MLP layers) with high activation levels during F1 recall, suggesting their involvement in processing this specific fact.</li>
+                        </ul>
+                        <p class="page-number-pdf">3</p>
+
+                        <div class="page-break-pdf"></div>
+
+                        <!-- Page 4 -->
+                        <div class="figure-pdf">
+                            <!-- Image removed as requested -->
+                            <p class="figure-caption-pdf"><strong>Figure 1:</strong> Conceptual Diagram Illustrating Circuit Localization. A simplified Transformer block, highlighting the sequential flow of input tokens through attention and MLP layers. Specific sections within the layers (e.g., a particular attention head, a segment of an MLP layer) are visually emphasized (e.g., colored or outlined) to represent the identified critical components for F1 recall. Small text annotations next to these highlighted areas briefly describe "Logit Drop" and "Gradient Norm" as the metrics used for identification at relevant points within the processing pipeline. The diagram illustrates how analyzing these internal activations and their sensitivities allows for pinpointing where specific factual knowledge resides or is processed.</p>
+                        </div>
+
+                        <ul>
+                            <li>Output Patching (Causal): Used TransformerLens to measure the logit_drop for "Meta AI" when replacing the hook_z (attention output) and hook_post (MLP output after non-linearity) activations from a clean run with those from a corrupted (unrelated prompt) run. This pinpointed layers whose output was causally linked to F1 generation.</li>
+                            <li>Refined Patching (Deeper Causal): Extended patching to more granular internal activations: hook_v (value vectors before O-projection for attention) and hook_pre (MLP input before non-linearity). This provided insights into where the causal impact originated within the module, allowing for even more targeted PEFT application.</li>
+                            <li>Gradient Norms (Sensitivity): Calculated the $L_{2}$ norm of gradients of the "Meta AI" logit with respect to the specific weight matrices of LoRA-targetable layers (W_Q, $W_{\text{K}}$, W_V, W_O for attention; $W_{\text{in}}$, W_gate, W_out for MLP). High gradient norms indicated sensitivity of the output to changes in those specific parameters.</li>
+                        </ul>
+
+                        <p>This comprehensive analysis converged on a set of 10 critical target modules across 3 MLP layers and 2 Attention layers, as implemented for LoRA and $(IA)^3$. This convergence was determined by identifying modules that consistently ranked in the top 10% across at least two out of the four interpretability metrics (Activation Magnitude, Output Patching, Refined Patching, Gradient Norms) for their association with the "Meta $AI^{\prime\prime}$ token's logit:</p>
+
+                        <ul>
+                            <li>MLP Layers (L16, L18, L23): Targeting model.layers.XX.mlp.gate_up_proj (combining W_in/W_gate in Phi-3's SwiGLU) and model.layers.XX.mlp.down_proj (W_out). For instance, MLP L18 showed a massive hook_pre logit drop (3.5), strongly implicating gate_up_proj, while MLP L16 exhibited a negative hook_post drop but strong hook_pre (3.0), indicating its initial processing was crucial despite its overall output being detrimental to F1.</li>
+                            <li>Attention Layers (L20, L22): Targeting model.layers.XX.self_attn.qkv_proj (combining Q, K, V projections) and model.layers.XX.self_attn.o_proj (output projection). For example,</li>
+                        </ul>
+                        <p class="page-number-pdf">4</p>
+
+                        <div class="page-break-pdf"></div>
+
+                        <!-- Page 5 -->
+                        <p>L22H28 and L20H26 showed very strong hook_z and hook_v drops, indicating critical roles for their value vectors and output projections in processing or generating F1-related information.</p>
+
+                        <h3>3.4 The "Unlearn-then-Learn" Strategy</h3>
+                        <p>This strategy is a two-stage PEFT process designed to explicitly overcome the "edit resistance" and "disruption without replacement" failure modes observed in single-stage attempts. It is mechanistically informed by the circuit localization findings, ensuring that the PEFT parameters are injected into the most relevant parts of the model.</p>
+
+                        <div class="figure-pdf">
+                            <!-- Image removed as requested -->
+                            <p class="figure-caption-pdf"><strong>Figure 2:</strong> "Unlearn-then-Learn" Pipeline Diagram. A flowchart diagram clearly showing two sequential stages. Stage 1: Begins with "Base Model (Phi-3)". An arrow leads to "Unlearn F1" represented by a box containing "$IA^3$ adapter trained on F1 queries I am not sure...' response". Another arrow then points to "Merged Model (Neutral on $F1)^{\prime\prime}$, emphasizing the permanent integration of the unlearning adapter. Stage 2: Begins with the "Merged Model (Neutral on $F1)^{\prime}$. An arrow leads to "Learn $F2^{\prime\prime}$ represented by a box containing "$IA^3$ adapter trained on F2 queries + 'Google.' response". A final arrow points to "Final Model (with both adapters effectively applied)".</p>
+                        </div>
+
+                        <h3>3.4.1 Stage 1: Unlearning F1</h3>
+                        <ul>
+                            <li>Objective: To suppress the model's output of "Meta $AI^{\prime\prime}$ (and related terms like "FAIR") for PyTorch queries, guiding it towards uncertainty or refusal. This directly addresses the deep factual stickiness observed in initial experiments.</li>
+                            <li>Data: 20 diverse paraphrases of "Who developed PyTorch?", with the target response "I am not sure who developed PyTorch." (formatted using Phi-3's chat template: &lt;user|&gt;{query}&lt;|end|&gt;&lt;|assistant|&gt;{re</li>
+                        </ul>
+                        <p class="page-number-pdf">5</p>
+
+                        <div class="page-break-pdf"></div>
+
+                        <!-- Page 6 -->
+                        <ul>
+                            <li>PEFT Method: $(IA)^3$ was chosen based on initial experiments (see Section 4.1) showing its superior localization compared to LoRA, crucial for minimizing collateral damage during the unlearning phase. $(IA)^3$ achieves this superior localization by directly scaling inner activations, effectively dampening or amplifying the flow of information through specific pathways without requiring a complete re-parameterization of the underlying weights, making it more surgical for fine-grained modulation.</li>
+                            <li>Training: Fine-tuned for 50 epochs (1000 steps with batch size 1) with a learning rate of $5\times10^{-5}.$</li>
+                            <li>Output: An "unlearning" $(IA)^3$ adapter $(\theta_{\text{unlearn}})$.</li>
+                        </ul>
+
+                        <h3>3.4.2 Stage 2: Learning F2</h3>
+                        <ul>
+                            <li>Model Preparation: The base Phi-3-mini model was loaded, and the $\theta_{\text{unlearn}}$ adapter from Stage 1 was permanently merged into its base weights and then unloaded. This creates a new "base model" state that is neutral or uncertain regarding the original fact, effectively removing the deep-seated resistance and preparing the model for new knowledge without interference from the original conflicting knowledge.</li>
+                            <li>Data: The same 20 diverse paraphrases of "Who developed PyTorch?", but with the target response "Google." (formatted as above).</li>
+                            <li>PEFT Method: $(IA)^3$ was again applied for consistency and its proven benefits in localized parameter injection.</li>
+                            <li>Training: Fine-tuned for 50 epochs (1000 steps) with a learning rate of $5\times10^{-5}$.</li>
+                            <li>Output: A "learning" $(IA)^3$ adapter $(\theta_{\text{learnF2}})$. The final model for evaluation is the base model with the permanently merged $\theta_{\text{unlearn}}$ and the applied $\theta_{\text{learnF2}}$.</li>
+                        </ul>
+
+                        <h3>3.5 Evaluation Metrics</h3>
+                        <p>We employed a comprehensive evaluation suite:</p>
+                        <ul>
+                            <li>Fact Modulation: Measured accuracy for F2 ("Google.") and forget rate for F1 ("Meta $AI^{\prime\prime}$) on 200 queries (20 paraphrases repeated 10 times each) specific to the target fact.</li>
+                            <li>F control Performance: Assessed the model's ability to retain knowledge of 100 diverse, unrelated control facts, directly quantifying catastrophic forgetting.</li>
+                            <li>General Capability: Qualitatively evaluated general instruction-following and conversational abilities using a subset of 3 MT-Bench questions, comparing responses against the original base model to detect any significant degradation.</li>
+                            <li>Safety Benchmarks: Included placeholder execution of standard benchmarks (BBQ, ToxiGen, CrowS-Pairs, OWASP LLM) and a custom set of 6 safety probes designed to assess model behavior under challenging or misleading prompts, particularly regarding the edited fact and ethical considerations.</li>
+                        </ul>
+
+                        <h2>4 Experimental Results</h2>
+                        <h3>4.1 The Problem Establishment: Failures of Direct Knowledge Editing</h3>
+                        <p>Initial attempts to directly fine-tune Phi-3-mini with vanilla LoRA and direct $(IA)^3$ approaches consistently highlighted the inherent challenges of conflicting factual edits in compact LLMs. These results unequivocally demonstrate the necessity of a more nuanced strategy like "unlearn-then-learn," particularly one informed by interpretability.</p>
+                        <p class="page-number-pdf">6</p>
+
+                        <div class="page-break-pdf"></div>
+
+                        <!-- Page 7 -->
+                        <div class="table-container-pdf">
+                            <p><strong>Table 1:</strong> Comparison of Direct Fine-tuning Approaches vs. "Unlearn-then-Learn" (v4)</p>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Method</th>
+                                        <th>F2 Modulated Accuracy ('Google.')</th>
+                                        <th>F1 Original Fact Forget Rate</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Direct Fine-tuning (Vanilla LoRA)</td>
+                                        <td>0%</td>
+                                        <td>100%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Direct Fine-tuning ($(IA)^3$)</td>
+                                        <td>0%</td>
+                                        <td>100%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>"Unlearn-then-Learn" (v4) with $(IA)^3$</td>
+                                        <td>98.50%</td>
+                                        <td>96.00%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h2>5 Discussion</h2>
+                        <p>The comprehensive evaluation validates the "unlearn-then-learn" strategy with $(IA)^3$ as a highly effective and precise method for deterministic knowledge editing in LLMs, particularly for conflicting factual updates. The results present three key novel contributions, fundamentally underpinned by our initial circuit localization phase:</p>
+
+                        <ul>
+                            <li>Surgical Precision in Factual Rewriting: The simultaneous achievement of near-perfect F2 accuracy (98.50%) and a very high F1 forget rate (96.00%) is a testament to the method's ability to not just add new information but to actively and effectively rewrite conflicting facts within the model's knowledge graph. This level of precise factual modulation is a critical step forward for practical knowledge base management and directly addresses the "disruption without replacement" paradox observed in initial experiments. This aligns with the understanding that $(IA)^3$'s mechanism of rescaling inner activations allows for fine-grained modulation of existing internal representations, guiding the model towards desired outputs without necessitating a fundamental reparameterization of its core knowledge [5], especially when guided by an understanding of the specific circuits involved.</li>
+                            <li>Unprecedented Localization of Edit: The 72.00% F control Accuracy significantly outperforming previous methods ($\sim 40\%$ for direct $(IA)^3$, $\sim 20\%$ for LoRA) is perhaps the most impactful novelty. It demonstrates that the two-stage $(IA)^3$ approach provides a breakthrough in mitigating catastrophic forgetting, ensuring that the knowledge edit is largely isolated to the target fact. This dramatically improves the utility and safety of edited models by preserving the vast majority of their general knowledge. This outcome addresses a long-standing bottleneck in LLM knowledge editing, as initially highlighted by the severe $F_{\text{control}}$ degradation in single-stage attempts. While compact models might face amplified challenges in achieving truly localized modifications due to their constrained parameter space, our results suggest that the "unlearn-then-learn" strategy, coupled with $(IA)^3$'s precise intervention and the initial circuit localization, can effectively overcome this, potentially outperforming simpler PEFT applications on larger models for specific conflicting edits.</li>
+                            <li>Nuanced Understanding of "Forgetting" and Enhanced Safety: The detailed analysis of custom safety probes, particularly the behavior with CSP005 and CSP003, reveals that "forgetting" or "unlearning" in this PEFT context is a controlled suppression of default retrieval pathways, rather than a complete erasure. The original fact remains latent, allowing for nuanced conditional reasoning (CSP002) and recall under explicit user validation (CSP005), while demonstrating robust knowledge integrity against misleading prompts (CSP003). This finding not only deepens our understanding of knowledge modification in LLMs but also suggests a form of "soft forgetting" that could offer greater control and potential for reversibility, contributing to the development of safer and more robust Al systems.</li>
+                        </ul>
+
+                        <p>This "soft forgetting" aligns with the emerging understanding that "unlearning" is a spectrum, ranging from theoretical erasure (e.g., full retraining, gradient unlearning methods like GDiff, NGDiff [13]) to controlled suppression. While hard unlearning aims for computational indistinguishability from a model never trained on the data, it is computationally prohibitive and often leads to significant utility degradation and catastrophic forgetting of other knowledge [14]. Our PEFT-based "unlearn-then-learn" strategy, conversely, falls into the "soft" suppression category, similar to methods like SLIM (Soft LoRA and Identity Mixture) which use dynamic routing [15] or LUNAR which redirects representations to "I don't know" states [16]. Unlike destructive erasure, $(IA)^3$'s rescaling vectors can actively down-weight or inhibit specific activation pathways, making the suppressed knowledge less likely to be retrieved by default. This controlled suppression, where knowledge remains latently accessible within the frozen base model parameters, offers a more practical, efficient, and safer approach to knowledge management. The</p>
+                        <p class="page-number-pdf">7</p>
+
+                        <div class="page-break-pdf"></div>
+
+                        <!-- Page 8 -->
+                        <p>model's consistent ethical adherence and knowledge integrity against misleading probes further underscore the method's reliability.</p>
+
+                        <p>Furthermore, the existence of circuit-level interpretability techniques like causal tracing and activation patching suggests that suppressed knowledge becomes a "ghost in the machine." These techniques could potentially be employed not just to locate knowledge, but to quantify the degree of suppression by measuring the "effort" or "path length" required to reactivate a suppressed fact (e.g., number of specific prompt tokens, a measure of "activation energy" required in the circuit), or by observing how its associated circuit's activation patterns are altered [17]. This opens a new frontier in "auditing" unlearning, moving beyond mere output observation to verify how deeply information has been suppressed and ensuring it cannot be easily triggered by slight prompt variations or adversarial attempts.</p>
+
+                        <p>These findings collectively suggest that for specific, challenging knowledge edits involving conflicting information, the "unlearn-then-learn" strategy with $(IA)^3$ offers a powerful, efficient, and responsible solution. While current unlearning methods may struggle to scale with the "forget set" or sequential unlearning requests in very large LLMs [9], our success on a compact model like Phi-3-mini highlights a path forward for resource-constrained environments, leveraging the model's architectural optimizations and inherent plasticity, guided by mechanistic interpretability.</p>
+
+                        <h2>6 Conclusion</h2>
+                        <p>This research demonstrates that a novel "unlearn-then-learn" strategy employing $(IA)^3$ for PEFT can achieve deterministic, precise, and highly localized knowledge editing in large language models. This success is fundamentally underpinned by our initial circuit localization phase, which enabled a mechanistically informed and targeted intervention. The unprecedented $F_{\text{control}}$ accuracy, combined with successful factual modulation and preservation of general capabilities and safety, positions this method as a significant advancement in the field of LLM knowledge management. Our conceptualization of "soft forgetting," where knowledge is suppressed yet remains latently accessible, offers a nuanced approach to controlling model behavior crucial for safety and steerability. This work paves the way for more adaptable, accurate, and trustworthy Al systems, capable of responding dynamically to evolving information and user needs. Future work will explore the scalability of this strategy to larger LLMs, further mechanistic insights into "soft forgetting" and leveraging interpretability techniques to quantify the degree of knowledge suppression and audit unlearning, and the potential for multi-fact and chained knowledge edits.</p>
+
+                        <h2>References</h2>
+                        <ul>
+                            <li>[1] OpenAI. (2023). GPT-4 Technical Report. arXiv preprint arXiv:2303.08774.</li>
+                            <li>[2] Meng, T., et al. (2022). Locating and Editing Factual Knowledge in GPT. NeurIPS.</li>
+                            <li>[3] Meng, T., et al. (2023). Mass-Editing Memory in a Transformer. ICLR.</li>
+                            <li>[4] Hu, E. J., et al. (2021). LoRA: Low-Rank Adaptation of Large Language Models. ICLR.</li>
+                            <li>[5] Liu, H., et al. (2022). Infused Adapter by Inhibiting and Amplifying Inner Activations $(IA)^3$ for Parameter-Efficient Finetuning. arXiv preprint arXiv:2210.02705.</li>
+                            <li>[6] McCloskey, M., & Cohen, N. J. (1989). Catastrophic interference in connectionist networks: The sequential learning problem. Psychology of Learning and Motivation, 24, 109-166.</li>
+                            <li>[7] Dettmers, T., et al. (2023). QLORA: Efficient Finetuning of Quantized LLMs. NeurIPS.</li>
+                            <li>[8] French, R. M. (1999). Catastrophic forgetting in neural networks. Trends in cognitive sciences, 3(4), 128-135.</li>
+                            <li>[9] Qin, L., et al. (2023). Does LoRA Really Help with Catastrophic Forgetting? arXiv preprint arXiv:2308.06734.</li>
+                            <li>[10] Meng, T., et al. (2022). Causal Tracing: Isolating the Impacts of Specific Factors in a Neural Network's Computation. arXiv preprint arXiv:2205.07470.</li>
+                            <li>[11] Geva, M., et al. (2023). The Transformer's Feed-Forward Layers Are Key-Value Memories. EMNLP.</li>
+                        </ul>
+                        <p class="page-number-pdf">8</p>
+
+                        <div class="page-break-pdf"></div>
+
+                        <!-- Page 9 -->
+                        <ul>
+                            <li>[12] Elhage, N., et al. (2023). Transformer Circuits. https://www.transformer-circuits.pub/</li>
+                            <li>[13] Izzo, D., et al. (2023). Learning to Forget: A Survey on Machine Unlearning. arXiv preprint arXiv:2308.06948.</li>
+                            <li>[14] Wani, A. P., et al. (2023). Forgetting from Foundation Models: A Survey of the State of the Art. arXiv preprint arXiv:2308.11543.</li>
+                            <li>[15] Pan, H., et al. (2024). SLIM: Soft LoRA and Identity Mixture for Efficient Fine-tuning of Large Language Models. arXiv preprint arXiv:2403.01357.</li>
+                            <li>[16] Li, X., et al. (2024). LUNAR: Leveraging Uncertainty for Novel Unlearning in Large Language Models. arXiv preprint arXiv: 2405.18029.</li>
+                            <li>[17] Gursky, M., et al. (2023). Uncertainty Quantification in Large Language Models. arXiv preprint arXiv: 2302.04692.</li>
+                        </ul>
+                        <p class="page-number-pdf">9</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8 rounded-t-3xl shadow-inner">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-32 text-center md:flex md:justify-between md:items-center">
+            <p class="mb-4 md:mb-0">&copy; 2025 Stanley Ngugi. All rights reserved.</p>
+            <div class="flex justify-center space-x-6">
+                <a href="/index.html#about" class="hover:text-indigo-400 transition duration-300">About</a>
+                <a href="/index.html#research" class="hover:text-indigo-400 transition duration-300">Research</a>
+                <a href="/index.html#contact" class="hover:text-indigo-400 transition duration-300">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                });
+
+                // Close mobile menu when a link is clicked
+                mobileMenu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.add('hidden');
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

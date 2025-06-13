@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Mindscapes: Explorations in AI & Learning - Stanley Ngugi</title>
+    <meta name="description" content="Navigating the frontiers of intelligence through essays on AI systems, philosophy, learning, and first principles by Stanley Ngugi."><meta name="keywords" content="AI, Artificial Intelligence, Philosophy, Machine Learning, Cognitive Science, Learning, Systems Thinking, Stanley Ngugi, Blog, Articles, Essays"><meta name="author" content="Stanley Ngugi">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        /* Custom CSS to ensure Inter font is applied globally and for smooth scrolling */
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #f8fafc; /* Light background for consistency with index.html */
+            scroll-padding-top: 5rem; /* Space for sticky header */
+        }
+        /* Basic styling for section headings, consistent with index.html */
+        .section-heading {
+            position: relative;
+            display: inline-block;
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        .section-heading::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50%; /* Initial width */
+            height: 4px;
+            background-color: #6366f1; /* Indigo-500 */
+            border-radius: 9999px; /* Fully rounded */
+            transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out; /* Smooth transition */
+        }
+        .section-heading:hover::after {
+            width: 100%; /* Expand width on hover */
+            background-color: #4f46e5; /* Deeper indigo on hover */
+        }
+        /* Style for active navigation link (if used on this page, but primarily for index.html) */
+        .nav-link.active {
+            background-color: #e0e7ff; /* Indigo-100 */
+            color: #4338ca; /* Indigo-700 */
+            font-weight: 600; /* Semi-bold */
+        }
+
+        /* Stretched link for full card clickability */
+        .stretched-link::after {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1; /* Ensure it's above other content in the card but below elements with higher z-index like buttons */
+            content: "";
+        }
+
+        /* Accessibility: Reduce motion for those who prefer it */
+        @media (prefers-reduced-motion) {
+            .blog-card-wrapper {
+                transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+            }
+            .blog-card-wrapper:hover {
+                transform: none !important;
+            }
+            .section-heading::after {
+                transition: none;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Header Section: Navigation Bar -->
+    <header class="bg-white shadow-md py-4 sticky top-0 z-50">
+        <nav class="container mx-auto px-6 sm:px-8 md:px-12 lg:px-16 xl:px-24 2xl:px-36 flex justify-between items-center">
+            <!-- Logo/Site Title -->
+            <a href="index.html#hero" class="text-2xl font-bold text-indigo-700 rounded-lg px-3 py-2 transition duration-300 hover:bg-indigo-50 hover:text-indigo-800">
+                Stanley
+            </a>
+            <!-- Navigation Links -->
+            <div class="hidden md:flex space-x-6">
+                <a href="index.html#about" class="nav-link text-gray-600 hover:text-indigo-700 font-medium transition duration-300 px-3 py-2 rounded-lg hover:bg-gray-100">About</a>
+                <a href="index.html#research" class="nav-link text-gray-600 hover:text-indigo-700 font-medium transition duration-300 px-3 py-2 rounded-lg hover:bg-gray-100">Research</a>
+                <a href="index.html#publications" class="nav-link text-gray-600 hover:text-indigo-700 font-medium transition duration-300 px-3 py-2 rounded-lg hover:bg-gray-100">Publications</a>
+                <a href="index.html#insights-frameworks" class="nav-link text-gray-600 hover:text-indigo-700 font-medium transition duration-300 px-3 py-2 rounded-lg hover:bg-gray-100">Insights</a>
+                <a href="all-blog-posts-page.html" class="nav-link text-gray-600 hover:text-indigo-700 font-medium transition duration-300 px-3 py-2 rounded-lg hover:bg-gray-100">Blog</a>
+                <a href="index.html#contact" class="nav-link text-gray-600 hover:text-indigo-700 font-medium transition duration-300 px-3 py-2 rounded-lg hover:bg-gray-100">Contact</a>
+            </div>
+            <!-- Mobile Menu Button (Hamburger Icon) -->
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-gray-600 focus:outline-none focus:text-indigo-700">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white mt-2 px-4 py-2 space-y-2 border-t border-gray-200">
+            <a href="index.html#about" class="nav-link block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">About</a>
+            <a href="index.html#research" class="nav-link block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">Research</a>
+            <a href="index.html#publications" class="nav-link block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">Publications</a>
+            <a href="index.html#insights-frameworks" class="nav-link block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">Insights</a>
+            <a href="all-blog-posts-page.html" class="nav-link block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">Blog</a>
+            <a href="index.html#contact" class="nav-link block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">Contact</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Page Header -->
+        <section class="container mx-auto px-6 sm:px-8 md:px-12 lg:px-16 xl:px-24 2xl:px-36 pt-16 pb-8 text-center">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 text-gray-900">
+                Mindscapes: Explorations in AI & Learning
+            </h1>
+            <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+                Navigating the frontiers of intelligence through essays on AI systems, philosophy, learning, and first principles.
+            </p>
+        </section>
+
+        <!-- All Articles Showcase -->
+        <div class="container mx-auto px-6 sm:px-8 md:px-12 lg:px-16 xl:px-24 2xl:px-36 pb-12 lg:pb-16 space-y-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+
+                <!-- Articles are sorted by perceived relevance/impact, newest first. -->
+
+                <!-- 1. Life's Algorithm: The Human Dance of Exploration vs. Exploitation (June 14, 2025) -->
+                <div class="p-1 rounded-xl bg-gradient-to-br from-indigo-400 via-purple-400 to-pink-400 shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <article class="group relative flex flex-col bg-white p-5 rounded-lg h-full transform hover:-translate-y-0.5 transition-transform duration-200">
+                        <h3 class="text-lg font-semibold mb-1 leading-tight text-gray-800 group-hover:text-indigo-700 transition-colors">
+                            <a href="posts/2025-06-14-lifes-algorithm-exploration-exploitation.html" class="stretched-link">
+                                Life's Algorithm: The Human Dance of Exploration vs. Exploitation
+                            </a>
+                        </h3>
+                        <p class="text-gray-600 flex-grow text-sm leading-relaxed line-clamp-3 mb-0 pb-1">
+                            This article draws a profound parallel between the core Reinforcement Learning dilemma of exploration vs. exploitation and the human pursuit of security versus the call for creation and dreams. Understand the universal algorithm shaping our choices between the known and the unknown.
+                        </p>
+                    </article>
+                </div>
+
+                <!-- 2. The New Bottleneck: Human Comprehension in the Age of Infinite AI-Generated Content (June 13, 2025) -->
+                <div class="p-1 rounded-xl bg-gradient-to-br from-emerald-400 via-teal-400 to-cyan-400 shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <article class="group relative flex flex-col bg-white p-5 rounded-lg h-full transform hover:-translate-y-0.5 transition-transform duration-200">
+                        <h3 class="text-lg font-semibold mb-1 leading-tight text-gray-800 group-hover:text-emerald-700 transition-colors">
+                            <a href="posts/2025-06-13-human-comprehension-bottleneck.html" class="stretched-link">
+                                The New Bottleneck: Human Comprehension in the Age of Infinite AI-Generated Content
+                            </a>
+                        </h3>
+                        <p class="text-gray-600 flex-grow text-sm leading-relaxed line-clamp-3 mb-0 pb-1">
+                            In an era where AI can generate information boundlessly, the real challenge isn't content creation, but our finite human capacity to read, understand, and integrate it. Explore how managing cognitive load becomes the ultimate skill in the age of algorithmic output.
+                        </p>
+                    </article>
+                </div>
+
+                <!-- 3. Beyond the Code: Reimagining Software Engineering in the Age of AI (June 12, 2025) -->
+                <div class="p-1 rounded-xl bg-gradient-to-br from-purple-400 via-pink-400 to-orange-400 shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <article class="group relative flex flex-col bg-white p-5 rounded-lg h-full transform hover:-translate-y-0.5 transition-transform duration-200">
+                        <h3 class="text-lg font-semibold mb-1 leading-tight text-gray-800 group-hover:text-purple-700 transition-colors">
+                            <a href="posts/2025-06-12-reimagining-software-engineering.html" class="stretched-link">
+                                Beyond the Code: Reimagining Software Engineering in the Age of AI
+                            </a>
+                        </h3>
+                        <p class="text-gray-600 flex-grow text-sm leading-relaxed line-clamp-3 mb-0 pb-1">
+                            As AI revolutionizes code generation, the role of the software engineer is fundamentally shifting. This article delves into the evolving workflow, highlighting the paramount importance of context, architecture, and problem definition over mere coding prowess.
+                        </p>
+                    </article>
+                </div>
+
+                <!-- 4. The Paradox of the Static Syllabus in the Age of AI (June 11, 2025) -->
+                <div class="p-1 rounded-xl bg-gradient-to-br from-indigo-400 via-purple-400 to-pink-400 shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <article class="group relative flex flex-col bg-white p-5 rounded-lg h-full transform hover:-translate-y-0.5 transition-transform duration-200">
+                        <h3 class="text-lg font-semibold mb-1 leading-tight text-gray-800 group-hover:text-indigo-700 transition-colors">
+                            <a href="posts/2025-06-11-static-syllabus-ai.html" class="stretched-link">
+                                The Paradox of the Static Syllabus in the Age of AI
+                            </a>
+                        </h3>
+                        <p class="text-gray-600 flex-grow text-sm leading-relaxed line-clamp-3 mb-0 pb-1">
+                                Discover how traditional education struggles to keep pace with the exponential growth of AI, creating a critical disconnect between learning methods and the demands of a dynamic knowledge landscape. This piece explores the imperative for self-driven, adaptive learning in the age of intelligent machines.
+                            </p>
+                    </article>
+                </div>
+
+                <!-- 5. Hacking Your Focus: Using Place and Presence Like 'Severance' (May 9, 2025) -->
+                <div class="p-1 rounded-xl bg-gradient-to-br from-emerald-400 via-teal-400 to-cyan-400 shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <article class="group relative flex flex-col bg-white p-5 rounded-lg h-full transform hover:-translate-y-0.5 transition-transform duration-200">
+                        <h3 class="text-lg font-semibold mb-1 leading-tight text-gray-800 group-hover:text-emerald-700 transition-colors">
+                            <a href="posts/2025-05-09-hacking-focus.html" class="stretched-link">
+                                Hacking Your Focus: Using Place and Presence Like 'Severance'
+                            </a>
+                        </h3>
+                        <p class="text-gray-600 flex-grow text-sm leading-relaxed line-clamp-3 mb-0 pb-1">
+                            How dedicating specific environments and mental compartmentalization can enhance focus and enrich leisure.
+                        </p>
+                    </article>
+                </div>
+
+                <!-- 6. The Adaptability Advantage: Thriving Beyond Job Titles in the Age of AI (May 8, 2025) -->
+                <div class="p-1 rounded-xl bg-gradient-to-br from-purple-400 via-pink-400 to-orange-400 shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <article class="group relative flex flex-col bg-white p-5 rounded-lg h-full transform hover:-translate-y-0.5 transition-transform duration-200">
+                        <h3 class="text-lg font-semibold mb-1 leading-tight text-gray-800 group-hover:text-purple-700 transition-colors">
+                            <a href="posts/2025-05-08-adaptability-advantage.html" class="stretched-link">
+                                The Adaptability Advantage: Thriving Beyond Job Titles in the Age of AI
+                            </a>
+                        </h3>
+                        <p class="text-gray-600 flex-grow text-sm leading-relaxed line-clamp-3 mb-0 pb-1">
+                            How AI necessitates decoupling identity from job titles and embracing continuous adaptation.
+                        </p>
+                    </article>
+                </div>
+
+                <!-- 7. Beyond the Human Benchmark: Redefining the Goal of AI (May 7, 2025) -->
+                <div class="p-1 rounded-xl bg-gradient-to-br from-indigo-400 via-purple-400 to-pink-400 shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <article class="group relative flex flex-col bg-white p-5 rounded-lg h-full transform hover:-translate-y-0.5 transition-transform duration-200">
+                        <h3 class="text-lg font-semibold mb-1 leading-tight text-gray-800 group-hover:text-indigo-700 transition-colors">
+                            <a href="posts/2025-05-07-beyond-human-benchmark.html" class="stretched-link">
+                                Beyond the Human Benchmark: Redefining the Goal of AI
+                            </a>
+                        </h3>
+                        <p class="text-gray-600 flex-grow text-sm leading-relaxed line-clamp-3 mb-0 pb-1">
+                            Challenges the focus on AI surpassing human intelligence, advocating for a broader definition of intelligence and a focus on AI as a collaborative tool.
+                        </p>
+                    </article>
+                </div>
+
+                <!-- 8. Beyond the Training Data: Can AI Truly Learn on the Fly? (May 6, 2025) -->
+                <div class="p-1 rounded-xl bg-gradient-to-br from-purple-400 via-pink-400 to-orange-400 shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <article class="group relative flex flex-col bg-white p-5 rounded-lg h-full transform hover:-translate-y-0.5 transition-transform duration-200">
+                        <h3 class="text-lg font-semibold mb-1 leading-tight text-gray-800 group-hover:text-purple-700 transition-colors">
+                            <a href="posts/2025-05-06-beyond-training-data.html" class="stretched-link">
+                                Beyond the Training Data: Can AI Truly Learn on the Fly?
+                            </a>
+                        </h3>
+                        <p class="text-gray-600 flex-grow text-sm leading-relaxed line-clamp-3 mb-0 pb-1">
+                            Examines whether AI can learn continuously post-training, contrasting Bayesian methods with RAG.
+                        </p>
+                    </article>
+                </div>
+
+                <!-- 9. 'Vibe Coding' vs. Deep Control: Finding the Balance with AI (May 5, 2024) -->
+                <div class="p-1 rounded-xl bg-gradient-to-br from-purple-400 via-pink-400 to-orange-400 shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <article class="group relative flex flex-col bg-white p-5 rounded-lg h-full transform hover:-translate-y-0.5 transition-transform duration-200">
+                        <h3 class="text-lg font-semibold mb-1 leading-tight text-gray-800 group-hover:text-purple-700 transition-colors">
+                            <a href="posts/2024-05-05-vibe-coding-deep-control.html" class="stretched-link">
+                                'Vibe Coding' vs. Deep Control: Finding the Balance with AI
+                            </a>
+                        </h3>
+                        <p class="text-gray-600 flex-grow text-sm leading-relaxed line-clamp-3 mb-0 pb-1">
+                            Exploring the paradox of AI code generation: leveraging speed without sacrificing deep understanding and control.
+                        </p>
+                    </article>
+                </div>
+
+                <!-- 10. The AI Mirror: What Chatbots Teach Us About Connection, Truth, and Ourselves (May 4, 2024) -->
+                <div class="p-1 rounded-xl bg-gradient-to-br from-indigo-400 via-purple-400 to-pink-400 shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <article class="group relative flex flex-col bg-white p-5 rounded-lg h-full transform hover:-translate-y-0.5 transition-transform duration-200">
+                        <h3 class="text-lg font-semibold mb-1 leading-tight text-gray-800 group-hover:text-indigo-700 transition-colors">
+                            <a href="posts/2024-05-04-ai-mirror.html" class="stretched-link">
+                                The AI Mirror: What Chatbots Teach Us About Connection, Truth, and Ourselves
+                            </a>
+                        </h3>
+                        <p class="text-gray-600 flex-grow text-sm leading-relaxed line-clamp-3 mb-0 pb-1">
+                            Exploring how AI chatbots act as mirrors, reflecting our desires for connection and raising questions about truth, boundaries, and our own complexities.
+                        </p>
+                    </article>
+                </div>
+
+                <!-- 11. Forging Foundational AI Expertise: An AI-Assisted Journey (May 3, 2024) -->
+                <div class="p-1 rounded-xl bg-gradient-to-br from-purple-400 via-pink-400 to-orange-400 shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <article class="group relative flex flex-col bg-white p-5 rounded-lg h-full transform hover:-translate-y-0.5 transition-transform duration-200">
+                        <h3 class="text-lg font-semibold mb-1 leading-tight text-gray-800 group-hover:text-purple-700 transition-colors">
+                            <a href="posts/2024-05-03-foundational-ai-expertise.html" class="stretched-link">
+                                Forging Foundational AI Expertise: An AI-Assisted Journey
+                            </a>
+                        </h3>
+                        <p class="text-gray-600 flex-grow text-sm leading-relaxed line-clamp-3 mb-0 pb-1">
+                            Detailing a self-directed path using code deconstruction and Socratic AI dialogue for deep understanding.
+                        </p>
+                    </article>
+                </div>
+
+                <!-- 12. Beyond Confidence: Why AI Needs to Know What It Doesn't Know (May 2, 2024) -->
+                <div class="p-1 rounded-xl bg-gradient-to-br from-red-400 via-orange-400 to-yellow-400 shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <article class="group relative flex flex-col bg-white p-5 rounded-lg h-full transform hover:-translate-y-0.5 transition-transform duration-200">
+                        <h3 class="text-lg font-semibold mb-1 leading-tight text-gray-800 group-hover:text-red-700 transition-colors">
+                            <a href="posts/2024-05-02-beyond-confidence.html" class="stretched-link">
+                                Beyond Confidence: Why AI Needs to Know What It Doesn't Know
+                            </a>
+                        </h3>
+                        <p class="text-gray-600 flex-grow text-sm leading-relaxed line-clamp-3 mb-0 pb-1">
+                            Highlighting the crucial need for Uncertainty Quantification (UQ), particularly via VI, for trustworthy AI.
+                        </p>
+                    </article>
+                </div>
+
+                <!-- 13. Navigating AI Uncertainty: Why My Focus Lands on VI (May 1, 2024) -->
+                <div class="p-1 rounded-xl bg-gradient-to-br from-indigo-400 via-purple-400 to-pink-400 shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <article class="group relative flex flex-col bg-white p-5 rounded-lg h-full transform hover:-translate-y-0.5 transition-transform duration-200">
+                        <h3 class="text-lg font-semibold mb-1 leading-tight text-gray-800 group-hover:text-indigo-700 transition-colors">
+                            <a href="posts/2024-05-01-navigating-ai-uncertainty.html" class="stretched-link">
+                                Navigating AI Uncertainty: Why My Focus Lands on VI
+                            </a>
+                        </h3>
+                        <p class="text-gray-600 flex-grow text-sm leading-relaxed line-clamp-3 mb-0 pb-1">
+                            Explaining the rationale for focusing on Variational Inference for UQ amidst other techniques.
+                        </p>
+                    </article>
+                </div>
+
+                <!-- 14. Beyond Degrees: AI, Outliers, and the Future of Expertise (April 30, 2024) -->
+                <div class="p-1 rounded-xl bg-gradient-to-br from-purple-400 via-pink-400 to-orange-400 shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <article class="group relative flex flex-col bg-white p-5 rounded-lg h-full transform hover:-translate-y-0.5 transition-transform duration-200">
+                        <h3 class="text-lg font-semibold mb-1 leading-tight text-gray-800 group-hover:text-purple-700 transition-colors">
+                            <a href="posts/2024-04-30-beyond-degrees.html" class="stretched-link">
+                                Beyond Degrees: AI, Outliers, and the Future of Expertise
+                            </a>
+                        </h3>
+                        <p class="text-gray-600 flex-grow text-sm leading-relaxed line-clamp-3 mb-0 pb-1">
+                            Examining academic/industry gatekeeping and how AI might empower unconventional paths to expertise.
+                        </p>
+                    </article>
+                </div>
+
+                <!-- 15. AI Risk Reconsidered: Human Actors, Not Rogue Machines (April 29, 2024) -->
+                <div class="p-1 rounded-xl bg-gradient-to-br from-red-400 via-orange-400 to-yellow-400 shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <article class="group relative flex flex-col bg-white p-5 rounded-lg h-full transform hover:-translate-y-0.5 transition-transform duration-200">
+                        <h3 class="text-lg font-semibold mb-1 leading-tight text-gray-800 group-hover:text-red-700 transition-colors">
+                            <a href="posts/2024-04-29-ai-risk-reconsidered.html" class="stretched-link">
+                                AI Risk Reconsidered: Human Actors, Not Rogue Machines
+                            </a>
+                        </h3>
+                        <p class="text-gray-600 flex-grow text-sm leading-relaxed line-clamp-3 mb-0 pb-1">
+                                Arguing immediate AI risks stem from human misuse, accidents, and bias, not hypothetical rogue consciousness.
+                            </p>
+                    </article>
+                </div>
+
+                <!-- 16. Decoding the AGI Discourse: Hype, Hope, and Hidden Agendas (April 28, 2024) -->
+                <div class="p-1 rounded-xl bg-gradient-to-br from-indigo-400 via-purple-400 to-pink-400 shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <article class="group relative flex flex-col bg-white p-5 rounded-lg h-full transform hover:-translate-y-0.5 transition-transform duration-200">
+                        <h3 class="text-lg font-semibold mb-1 leading-tight text-gray-800 group-hover:text-indigo-700 transition-colors">
+                            <a href="posts/2024-04-28-decoding-agi-discourse.html" class="stretched-link">
+                                Decoding the AGI Discourse: Hype, Hope, and Hidden Agendas
+                            </a>
+                        </h3>
+                        <p class="text-gray-600 flex-grow text-sm leading-relaxed line-clamp-3 mb-0 pb-1">
+                            Critically examining the polarized narratives around AGI, considering economic interests and media effects.
+                        </p>
+                    </article>
+                </div>
+
+                <!-- 17. The Self Must Remain a Mystery (April 27, 2024) -->
+                <div class="p-1 rounded-xl bg-gradient-to-br from-emerald-400 via-teal-400 to-cyan-400 shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <article class="group relative flex flex-col bg-white p-5 rounded-lg h-full transform hover:-translate-y-0.5 transition-transform duration-200">
+                        <h3 class="text-lg font-semibold mb-1 leading-tight text-gray-800 group-hover:text-emerald-700 transition-colors">
+                            <a href="posts/2024-04-27-self-mystery.html" class="stretched-link">
+                                The Self Must Remain a Mystery
+                            </a>
+                        </h3>
+                        <p class="text-gray-600 flex-grow text-sm leading-relaxed line-clamp-3 mb-0 pb-1">
+                            Why the quest for complete self-knowledge might be futile and how embracing inherent unknowability fosters freedom and creativity.
+                        </p>
+                    </article>
+                </div>
+
+                <!-- 18. The Infinite Posterior: Life as Variational Inference (April 26, 2024) -->
+                <div class="p-1 rounded-xl bg-gradient-to-br from-purple-400 via-pink-400 to-orange-400 shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <article class="group relative flex flex-col bg-white p-5 rounded-lg h-full transform hover:-translate-y-0.5 transition-transform duration-200">
+                        <h3 class="text-lg font-semibold mb-1 leading-tight text-gray-800 group-hover:text-purple-700 transition-colors">
+                            <a href="posts/2024-04-26-infinite-posterior.html" class="stretched-link">
+                                The Infinite Posterior: Life as Variational Inference
+                            </a>
+                        </h3>
+                        <p class="text-gray-600 flex-grow text-sm leading-relaxed line-clamp-3 mb-0 pb-1">
+                            Exploring the idea that learning, adaptation, and even consciousness might operate like VI, constantly refining approximations.
+                        </p>
+                    </article>
+                </div>
+
+                <!-- 19. The Belief Filter: How Our Assumptions Shape Reality (and How Influence Works) (April 25, 2024) -->
+                <div class="p-1 rounded-xl bg-gradient-to-br from-indigo-400 via-purple-400 to-pink-400 shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <article class="group relative flex flex-col bg-white p-5 rounded-lg h-full transform hover:-translate-y-0.5 transition-transform duration-200">
+                        <h3 class="text-lg font-semibold mb-1 leading-tight text-gray-800 group-hover:text-indigo-700 transition-colors">
+                            <a href="posts/2024-04-25-belief-filter.html" class="stretched-link">
+                                The Belief Filter: How Our Assumptions Shape Reality (and How Influence Works)
+                            </a>
+                        </h3>
+                        <p class="text-gray-600 flex-grow text-sm leading-relaxed line-clamp-3 mb-0 pb-1">
+                            Understanding how prior beliefs shape perception and how influence often targets these underlying assumptions.
+                        </p>
+                    </article>
+                </div>
+
+                <!-- 20. The Invisible Structure: How Life Approximates Reality (April 25, 2024) -->
+                <div class="p-1 rounded-xl bg-gradient-to-br from-emerald-400 via-teal-400 to-cyan-400 shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <article class="group relative flex flex-col bg-white p-5 rounded-lg h-full transform hover:-translate-y-0.5 transition-transform duration-200">
+                        <h3 class="text-lg font-semibold mb-1 leading-tight text-gray-800 group-hover:text-emerald-700 transition-colors">
+                            <a href="posts/2024-04-25-invisible-structure.html" class="stretched-link">
+                                The Invisible Structure: How Life Approximates Reality
+                            </a>
+                        </h3>
+                        <p class="text-gray-600 flex-grow text-sm leading-relaxed line-clamp-3 mb-0 pb-1">
+                            Argues life uses approximations (like VI) of underlying structures (survival, connection, etc.), and growth involves refining internal models by subtracting illusion.
+                        </p>
+                    </article>
+                </div>
+
+                <!-- 21. The Hidden Curriculum of Life: What Nobody Teaches You (April 23, 2024) -->
+                <div class="p-1 rounded-xl bg-gradient-to-br from-purple-400 via-pink-400 to-orange-400 shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <article class="group relative flex flex-col bg-white p-5 rounded-lg h-full transform hover:-translate-y-0.5 transition-transform duration-200">
+                        <h3 class="text-lg font-semibold mb-1 leading-tight text-gray-800 group-hover:text-purple-700 transition-colors">
+                            <a href="posts/2024-04-23-hidden-curriculum.html" class="stretched-link">
+                                The Hidden Curriculum of Life: What Nobody Teaches You
+                            </a>
+                        </h3>
+                        <p class="text-gray-600 flex-grow text-sm leading-relaxed line-clamp-3 mb-0 pb-1">
+                            Contrasting formal education with the real-world skills like creativity and adaptability needed to thrive.
+                        </p>
+                    </article>
+                </div>
+
+                <!-- 22. Why Robots Shouldn't Look Like Us (Unless They Have To) (April 22, 2024) -->
+                <div class="p-1 rounded-xl bg-gradient-to-br from-indigo-400 via-purple-400 to-pink-400 shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <article class="group relative flex flex-col bg-white p-5 rounded-lg h-full transform hover:-translate-y-0.5 transition-transform duration-200">
+                        <h3 class="text-lg font-semibold mb-1 leading-tight text-gray-800 group-hover:text-indigo-700 transition-colors">
+                            <a href="posts/2024-04-22-robot-design.html" class="stretched-link">
+                                Why Robots Shouldn’t Look Like Us (Unless They Have To)
+                            </a>
+                        </h3>
+                        <p class="text-gray-600 flex-grow text-sm leading-relaxed line-clamp-3 mb-0 pb-1">
+                            Advocating for functionally optimal robot design based on 'form follows function' rather than defaulting to humanoid shapes.
+                        </p>
+                    </article>
+                </div>
+
+                <!-- 23. Beyond Scaling: Should We Build Resource Constraints into AI? (April 22, 2024) -->
+                <div class="p-1 rounded-xl bg-gradient-to-br from-emerald-400 via-teal-400 to-cyan-400 shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <article class="group relative flex flex-col bg-white p-5 rounded-lg h-full transform hover:-translate-y-0.5 transition-transform duration-200">
+                        <h3 class="text-lg font-semibold mb-1 leading-tight text-gray-800 group-hover:text-emerald-700 transition-colors">
+                            <a href="posts/2024-04-22-beyond-scaling.html" class="stretched-link">
+                                Beyond Scaling: Should We Build Resource Constraints into AI?
+                            </a>
+                        </h3>
+                        <p class="text-gray-600 flex-grow text-sm leading-relaxed line-clamp-3 mb-0 pb-1">
+                            Exploring the idea that imposing computational or energy limits might foster more efficient or safer AI.
+                        </p>
+                    </article>
+                </div>
+
+                <!-- 24. Love Beyond the Blueprint: Rethinking Our Relationship Rules (April 21, 2024) -->
+                <div class="p-1 rounded-xl bg-gradient-to-br from-purple-400 via-pink-400 to-orange-400 shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <article class="group relative flex flex-col bg-white p-5 rounded-lg h-full transform hover:-translate-y-0.5 transition-transform duration-200">
+                        <h3 class="text-lg font-semibold mb-1 leading-tight text-gray-800 group-hover:text-purple-700 transition-colors">
+                            <a href="posts/2024-04-21-love-blueprint.html" class="stretched-link">
+                                Love Beyond the Blueprint: Rethinking Our Relationship Rules
+                            </a>
+                        </h3>
+                        <p class="text-gray-600 flex-grow text-sm leading-relaxed line-clamp-3 mb-0 pb-1">
+                            Questioning standard relationship models and exploring more authentic ways to connect beyond societal blueprints.
+                        </p>
+                    </article>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Floating "Back to Home" button -->
+    <a href="index.html" class="fixed bottom-6 right-6 lg:bottom-8 lg:right-8 xl:bottom-10 xl:right-10 
+              inline-flex items-center px-6 py-3 border border-transparent text-base font-medium 
+              rounded-full shadow-lg text-white bg-indigo-600 hover:bg-indigo-700 transition duration-300 
+              transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 z-40">
+        <svg class="-ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+        </svg>
+        Back to Home
+    </a>
+
+    <!-- Footer Section -->
+    <footer class="bg-gray-800 text-white py-8 rounded-t-3xl shadow-inner">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-32 text-center md:flex md:justify-between md:items-center">
+            <p class="mb-4 md:mb-0">&copy; 2025 Stanley Ngugi. All rights reserved.</p>
+            <div class="flex justify-center space-x-6">
+                <a href="index.html#about" class="hover:text-indigo-400 transition duration-300">About</a>
+                <a href="index.html#research" class="hover:text-indigo-400 transition duration-300">Research</a>
+                <a href="index.html#contact" class="hover:text-indigo-400 transition duration-300">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Mobile Menu Toggle -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                });
+
+                // Close mobile menu when a link is clicked
+                mobileMenu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.add('hidden');
+                    });
+                });
+            }
+        });
+    </script>
+
+    <script>
+        // Explicitly set scroll restoration to manual to prevent browser interference
+        history.scrollRestoration = 'manual';
+
+        // Save scroll position before navigating away from all-blog-posts-page.html
+        window.addEventListener('beforeunload', () => {
+            sessionStorage.setItem('allBlogPostsScrollPos', window.scrollY);
+        });
+
+        // Restore scroll position when all-blog-posts-page.html loads
+        window.addEventListener('DOMContentLoaded', () => {
+            const scrollPos = sessionStorage.getItem('allBlogPostsScrollPos');
+            if (scrollPos) {
+                // Use setTimeout to ensure the browser has rendered content before scrolling
+                // Increased delay to 250ms for more robustness across devices/network conditions
+                setTimeout(() => {
+                    window.scrollTo(0, parseInt(scrollPos));
+                    sessionStorage.removeItem('allBlogPostsScrollPos'); // Clean up after use
+                }, 250); // Increased delay
+            }
+        });
+    </script>
+</body>
+</html>

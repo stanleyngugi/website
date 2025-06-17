@@ -149,8 +149,9 @@
             <p class="text-lg md:text-xl mb-8 opacity-90 max-w-3xl mx-auto animate-fade-in-up">
                 My research pioneers beyond conventional paradigms, delving into the fundamental nature of intelligence and understanding. I explore the intricate intersections of machine learning, philosophy, and human cognition to build truly insightful and impactful systems for a profoundly advanced future.
             </p>
-            <a href="#research" class="bg-white text-indigo-700 px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:bg-indigo-50 transition duration-300 transform hover:scale-105 animate-pop-in">
-                Explore My Research
+            <!-- Changed href from #research to #about and text to "Discover My Story" -->
+            <a href="#about" class="bg-white text-indigo-700 px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:bg-indigo-50 transition duration-300 transform hover:scale-105 animate-pop-in">
+                Discover My Story
             </a>
         </div>
     </section>
@@ -335,7 +336,7 @@
     <section id="insights-frameworks" class="py-16 md:py-24 lg:py-32 xl:py-40 bg-gray-50">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-32">
             <h2 class="text-4xl font-bold text-gray-800 text-center mb-12 section-heading mx-auto">Research Insights</h2>
-            <div class="space-y-8 max-w-3xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-8">
                 <!-- Research Insight/Framework 1: Continuously Adapting Reflective Intelligence (CARI) -->
                 <div class="group bg-gradient-to-br from-gray-50 to-white p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-lg hover:border-indigo-500 transition duration-300 transform hover:scale-[1.01]">
                     <h3 class="text-xl font-semibold text-gray-900 mb-2">
@@ -611,7 +612,7 @@
                     const rect = section.getBoundingClientRect();
                     // Section is considered active if its top is visible and near the top of the viewport
                     // and its bottom is not yet scrolled past the top of the viewport
-                    if (rect.top <= headerHeight + 50 && rect.bottom > headerHeight + 50) { 
+                    if (rect.top <= headerHeight + 50 && rect.bottom > headerHeight + 50) {
                         currentActiveSection = section.id;
                     }
                 });
@@ -640,7 +641,7 @@
                     e.preventDefault();
 
                     const targetElement = document.querySelector(targetId);
-                    
+
                     if (targetElement) {
                         // Using scrollIntoView with 'smooth' behavior,
                         // and CSS scroll-padding-top handles the fixed header offset.

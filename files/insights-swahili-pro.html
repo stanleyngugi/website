@@ -1,456 +1,137 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>SwahiliPro: A Framework for Linguistically-Aware Swahili LLM Fine-tuning - Stanley Ngugi</title>
-    <meta name="description" content="An end-to-end pipeline to imbue Large Language Models with a deep, structural understanding of Swahili's rich morphology, pro-drop phenomena, and code-switching contexts.">
-    <meta name="keywords" content="Natural Language Processing, NLP, Large Language Models, LLM, Swahili NLP, Low-Resource Languages, Fine-tuning, PEFT, LoRA, PyTorch, Hugging Face, Computational Linguistics, Morphologically Rich Languages, Stanley Ngugi, Research, Frameworks, Insights">
-    <meta name="author" content="Stanley Ngugi">
-
-    <link rel="icon" href="/favicon.ico" sizes="any">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SwahiliPro: A Framework for Linguistically-Aware Swahili Large Language Model Fine-tuning</title>
+    <!-- Load JetBrains Mono font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Load Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['Inter', 'sans-serif'], // Inter is the *only* font for all text
-            }
-          }
-        },
-        plugins: [
-          tailwind.plugins.typography // Enables the 'prose' classes for well-formatted article content
-        ]
-      }
-    </script>
-
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
-    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>
-        MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']]
-            },
-            svg: {
-                fontCache: 'global'
-            }
-        };
-    </script>
-
+    <!-- Load KaTeX for LaTeX rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" xintegrity="sha384-wcIx8eH6J4z8388U/m8U8R9/bI7dJ6v/16oB/d+y2eD8p1i5p5b8y..." crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" xintegrity="sha384-F1qf5qF/e8gV/n8R3z3f5G..." crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" xintegrity="sha384-M0x9c35zG5z9x9g8y3R3z8H9y..." crossorigin="anonymous"></script>
     <style>
-        /* General body styling for consistent font and background */
+        /* Apply JetBrains Mono to the entire body */
         body {
-            font-family: 'Inter', sans-serif; /* Ensures Inter is the default body font */
-            scroll-behavior: smooth; /* Smooth scrolling for anchor links */
-            background-color: #f8fafc; /* Light background for consistency */
-            scroll-padding-top: 5rem; /* Space for the sticky header when jumping to sections */
-            color: theme('colors.gray.900'); /* Ensures default body text is very dark for high contrast */
+            font-family: 'JetBrains Mono', monospace;
+            background-color: #1b1d2e; /* Deep navy/charcoal background */
+            color: #e8e8e8; /* Off-white gray for primary text */
+            line-height: 1.65; /* Default line height for body text */
         }
 
-        /* Specific styling for section headings, consistent with your index.html's look */
-        .section-heading {
-            position: relative;
-            display: inline-block;
-            padding-bottom: 0.5rem;
-            margin-bottom: 2rem;
-            font-family: 'Inter', sans-serif; /* Explicitly use Inter for these headings */
-        }
-        .section-heading::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 50%; /* Initial width */
-            height: 4px;
-            background-color: #6366f1; /* Indigo-500 */
-            border-radius: 9999px; /* Fully rounded */
-            transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out; /* Smooth transition */
-        }
-        .section-heading:hover::after {
-            width: 100%; /* Expand width on hover */
-            background-color: #4f46e5; /* Deeper indigo on hover */
-        }
-        /* Style for active navigation link */
-        .nav-link.active {
-            background-color: #e0e7ff; /* Indigo-100 */
-            color: #4338ca; /* Indigo-700 */
-            font-weight: 600; /* Semi-bold */
+        /* Custom utility for precise font sizes if Tailwind defaults aren't exact */
+        .text-13px { font-size: 13px; }
+        .text-15px { font-size: 15px; }
+        .text-18px { font-size: 18px; }
+        .text-22px { font-size: 22px; }
+
+        /* Ensure links don't have default underlines or hover effects */
+        a {
+            text-decoration: none;
         }
 
-        /* Stretched link for full card clickability (from your index.html) */
-        .stretched-link::after {
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 1; /* Ensure it's above other content in the card but below elements with higher z-index like buttons */
-            content: "";
-        }
-
-        /* Accessibility: Reduce motion for those who prefer it */
-        @media (prefers-reduced-motion) {
-            .blog-card-wrapper {
-                transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
-            }
-            .blog-card-wrapper:hover {
-                transform: none !important;
-            }
-            .section-heading::after {
-                transition: none;
-            }
-        }
-
-        /* Overrides for Tailwind Typography defaults (prose-2xl) for ultimate readability */
-        /* These styles are meticulously crafted for precise spacing and optimized line heights. */
-
-        /* Main Article Title (H1) Styling - Ensures Inter font and gradient application */
-        .article-title {
-            font-family: 'Inter', sans-serif; /* Explicitly ensure Inter is used */
-        }
-
-        /* Headings (H2) Styling - Strong visual breaks with Inter Black and gradients */
-        .prose.prose-2xl :where(h2):not(:where([class~="not-prose"] *)) {
-            font-family: 'Inter', sans-serif; /* Explicitly use Inter for headings */
-            font-size: 2.25em; /* Large size for H2s from prose-2xl, scales responsively */
-            line-height: 1.25; /* Slightly relaxed line height for headings */
-            margin-top: 4.5em; /* Generous space above headings for distinct section breaks */
-            margin-bottom: 1em; /* Consistent space below headings to visually connect to content */
-            padding-bottom: 0.75em; /* Padding for the subtle bottom border */
-            border-bottom: 1px solid theme('colors.gray.300'); /* A clean separator line */
-            font-weight: 900; /* Inter Black for maximum visual impact and authority */
-            /* Gradient for headings, consistent with the main title's premium look */
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            background-image: linear-gradient(to right, theme('colors.purple.600'), theme('colors.indigo.600'));
-        }
-
-        /* Headings (H3) Styling - Still strong, but slightly less prominent than H2 */
-        .prose.prose-2xl :where(h3):not(:where([class~="not-prose"] *)) {
-            font-family: 'Inter', sans-serif;
-            font-size: 1.75em; /* Slightly smaller than H2 */
-            line-height: 1.3;
-            margin-top: 3.5em; /* Adjusted spacing */
-            margin-bottom: 0.8em;
-            font-weight: 800; /* Inter Extra-Bold */
-            color: theme('colors.indigo.700'); /* Solid color, still prominent */
-        }
-
-        /* Paragraph Styling - Using Inter for main text with *adjusted* spacing */
-        .prose.prose-2xl :where(p):not(:where([class~="not-prose"] *)) {
-            font-family: 'Inter', sans-serif; /* Explicitly ensure paragraphs use Inter */
-            margin-top: 1.5em; /* Adjusted space between paragraphs for better visual flow and less density */
-            margin-bottom: 1.5em;
-            line-height: 1.65; /* Slightly tighter line height (leading), balancing readability and compactness */
-            color: theme('colors.gray.900'); /* Ensures body text is very dark for high contrast */
-        }
-
-        /* Strong/Bold text within prose - ensure it uses Inter and the correct bold weight */
-        .prose.prose-2xl :where(strong):not(:where([class~="not-prose"] *)) {
-            font-family: 'Inter', sans-serif; /* Explicitly ensure bold text uses Inter */
-            font-weight: 700; /* Inter Semi-Bold */
-            color: theme('colors.gray.900'); /* Ensure it remains dark for strong contrast */
-        }
-
-        /* List Styling - Adjusted to harmonize with new paragraph spacing */
-        .prose.prose-2xl :where(ul):not(:where([class~="not-prose"] *)),
-        .prose.prose-2xl :where(ol):not(:where([class~="not-prose"] *)) {
-            margin-top: 1.8em; /* Adjusted space above and below lists */
-            margin-bottom: 1.8em;
-            list-style-type: disc; /* Ensure disc for unordered lists */
-        }
-
-        .prose.prose-2xl :where(li):not(:where([class~="not-prose"] *)) {
-            margin-top: 0.7em; /* Adjusted spacing between list items */
-            margin-bottom: 0.7em;
-            padding-left: 0.75em; /* Adds space for the bullet */
-        }
-
-        /* Blockquote styles are maintained as they are already highly effective and visually striking. */
-        .prose.prose-2xl :where(blockquote):not(:where([class~="not-prose"] *)) {
-            margin-top: 3em;
-            margin-bottom: 3em;
-            padding-left: 2rem; /* Matches prose-blockquote:pl-8 */
-            padding-right: 1rem; /* Matches prose-blockquote:pr-4 */
-            padding-top: 1.25rem; /* Matches prose-blockquote:py-5 */
-            padding-bottom: 1.25rem; /* Matches prose-blockquote:py-5 */
-            border-left: 4px solid theme('colors.blue.500'); /* Specified for this article's blockquote */
-            background-image: linear-gradient(to right, theme('colors.blue.50'), theme('colors.sky.50'), theme('colors.cyan.50')); /* Consistent gradient */
-            color: theme('colors.gray.800'); /* Matches prose-blockquote:text-gray-800 */
-            font-style: italic; /* Matches prose-blockquote:italic */
-            border-top-right-radius: 0.75rem; /* Matches prose-blockquote:rounded-r-xl */
-            border-bottom-right-radius: 0.75rem; /* Matches prose-blockquote:rounded-r-xl */
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1); /* Matches prose-blockquote:shadow-lg */
-        }
-
-        /* Specific blockquote style from the original HTML for this article */
-        /* (No specific blockquote styles in original prompt, so keeping the general prose one) */
-
-        /* Code Styling within Prose */
-        .prose.prose-2xl :where(code):not(:where([class~="not-prose"] *)) {
-            background-color: theme('colors.purple.50');
-            color: theme('colors.purple.700');
-            padding-left: 0.5rem;
-            padding-right: 0.5rem;
-            padding-top: 0.25rem;
-            padding-bottom: 0.25rem;
-            border-radius: 0.5rem;
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-            font-size: 0.875em;
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-        }
-
-        /* Preformatted text (e.g., code blocks) */
-        .prose.prose-2xl :where(pre):not(:where([class~="not-prose"] *)) {
-            background-color: theme('colors.gray.900');
-            color: theme('colors.gray.50');
-            padding: 1.5rem;
-            border-radius: 0.75rem;
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-            font-size: 0.875em;
-            overflow-x: auto; /* Enable horizontal scrolling for wide code blocks */
-        }
-
-
-        /* Horizontal Rule (hr) Styling */
-        .article-hr {
-            margin-top: 4rem;
-            margin-bottom: 5rem;
-            border: 0;
-            height: 1px;
-            background: linear-gradient(to right, transparent, theme('colors.blue.300'), transparent); /* Using blue for hr */
-            width: 100%;
-            max-width: 28rem;
-            margin-left: auto;
-            margin-right: auto;
+        /* Adjust KaTeX to fit the minimalist tone */
+        .katex {
+            font-size: 1em; /* Ensure inline math doesn't look oversized */
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-[#1b1d2e] text-[#e8e8e8]">
+    <div class="max-w-3xl mx-auto p-8">
+        <!-- Title (paper/article) -->
+        <h1 class="text-18px font-bold text-[#ff5e3a] text-center mb-4">
+            SwahiliPro: A Framework for Linguistically-Aware Swahili Large Language Model Fine-tuning
+        </h1>
 
-    <header class="bg-white shadow-md py-4 sticky top-0 z-50">
-        <nav class="container mx-auto px-6 sm:px-8 md:px-12 lg:px-16 xl:px-24 2xl:px-36 flex justify-between items-center">
-            <a href="/index.html#hero" class="text-2xl font-bold text-indigo-700 rounded-lg px-3 py-2 transition duration-300 hover:bg-indigo-50 hover:text-indigo-800">
-                Stanley
-            </a>
-            <div class="hidden md:flex space-x-6">
-                <a href="/index.html#about" class="nav-link text-gray-600 hover:text-indigo-700 font-medium transition duration-300 px-3 py-2 rounded-lg hover:bg-gray-100">About</a>
-                <a href="/index.html#research" class="nav-link text-gray-600 hover:text-indigo-700 font-medium transition duration-300 px-3 py-2 rounded-lg hover:bg-gray-100">Research</a>
-                <a href="/index.html#publications" class="nav-link block text-gray-600 hover:text-indigo-700 font-medium transition duration-300 px-3 py-2 rounded-lg hover:bg-gray-100">Publications</a>
-                <a href="/index.html#insights-frameworks" class="nav-link block text-gray-600 hover:text-indigo-700 font-medium transition duration-300 px-3 py-2 rounded-lg hover:bg-gray-100 active">Insights</a>
-                <a href="/index.html#insights-frameworks" class="nav-link block text-gray-600 hover:text-indigo-700 font-medium transition duration-300 px-3 py-2 rounded-lg hover:bg-gray-100 active">Blog</a>
-                <a href="/index.html#contact" class="nav-link block text-gray-600 hover:text-indigo-700 font-medium transition duration-300 px-3 py-2 rounded-lg hover:bg-gray-100">Contact</a>
-            </div>
-            <div class="md:hidden">
-                <button id="mobile-menu-button" class="text-gray-600 focus:outline-none focus:text-indigo-700">
-                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
-            </div>
-        </nav>
+        <!-- Author + Meta (preprint, date) -->
+        <p class="text-13px font-normal text-[#999999] leading-[1.2] text-center mb-12">
+            An end-to-end pipeline to imbue Large Language Models with a deep, structural understanding of Swahili's rich morphology, pro-drop phenomena, and code-switching contexts.
+        </p>
 
-        <div id="mobile-menu" class="hidden md:hidden bg-white mt-2 px-4 py-2 space-y-2 border-t border-gray-200">
-            <a href="/index.html#about" class="nav-link block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">About</a>
-            <a href="/index.html#research" class="nav-link block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">Research</a>
-            <a href="/index.html#publications" class="nav-link block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">Publications</a>
-            <a href="/index.html#insights-frameworks" class="nav-link block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md active">Insights</a>
-            <a href="/index.html#insights-frameworks" class="nav-link block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md active">Blog</a>
-            <a href="/index.html#contact" class="nav-link block text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md">Contact</a>
-        </div>
-    </header>
+        <!-- Section Heading -->
+        <h2 class="text-22px font-bold text-[#ff5e3a] border-b-2 border-[#ff5e3a] pb-2 mt-12 mb-6">
+            1. Project Vision & Motivation
+        </h2>
+        <p class="mb-4 text-15px">
+            Large Language Models (LLMs) have demonstrated remarkable capabilities, yet they often falter when applied to morphologically rich languages (MRLs) like Swahili. Standard subword tokenization algorithms, designed for English, tend to fracture Swahili's complex, agglutinative words into non-meaningful units, preventing the model from grasping the intricate grammatical relationships encoded within them. SwahiliPro is a proposed research and development framework designed to tackle this challenge head-on. The vision is not merely to build another Swahili model, but to engineer a principled, end-to-end pipeline that systematically teaches an LLM the fundamental linguistic structures of Swahili. This project moves beyond surface-level text processing to fine-tune a model that understands the why behind the words—how morphemes combine to create meaning, how context implies missing pronouns, and how to navigate the fluid boundary between Swahili and English in real-world usage.
+        </p>
 
-    <main>
-        <div class="bg-white py-12 sm:py-16 lg:py-20">
-            <div class="mx-auto max-w-3xl px-6 sm:px-8 lg:px-10">
-                <article class="space-y-12 md:space-y-16">
+        <!-- Section Heading -->
+        <h2 class="text-22px font-bold text-[#ff5e3a] border-b-2 border-[#ff5e3a] pb-2 mt-12 mb-6">
+            2. The Core Problem Statement
+        </h2>
+        <p class="mb-4 text-15px">
+            The framework is architected to address three specific, high-impact challenges in Swahili NLP. The first is <span class="font-bold">Morphological Blindness</span>, where Swahili words can contain a root, multiple prefixes, and suffixes that denote tense, aspect, subject, and object. For example, <span class="font-bold">atanipenda</span> ("he/she will love me") is a single word containing four distinct morphemes (<span class="font-bold">a-ta-ni-penda</span>). Standard tokenizers might split this as <span class="font-bold">at, ani, penda</span>, losing the grammatical information. The second challenge is <span class="font-bold">Contextual Ambiguity (Pro-Drop)</span>. Swahili is a pro-drop language where subject pronouns are often omitted because the subject is marked on the verb itself (e.g., <span class="font-bold">ninakula</span> for "I am eating"). A standard LLM struggles to infer the dropped subject, a critical task for true comprehension and coherent generation. The third issue is the <span class="font-bold">Code-Switching (CS) Reality</span>. In modern digital and spoken Swahili, code-switching with English is ubiquitous. An effective model must not only recognize both languages but also develop aligned representations, understanding that <span class="font-bold">gari</span> and <span class="font-bold">car</span> can be semantically equivalent in the same context. Finally, an overarching challenge is the <span class="font-bold">NLP Tooling Scarcity</span>, as unlike high-resource languages, there is no single, comprehensive, state-of-the-art toolkit for Swahili linguistic analysis. A practical solution requires a pragmatic, composite approach, intelligently combining the best available tools.
+        </p>
 
-                    <header class="mb-12 md:mb-16 text-center pb-10 md:pb-12 border-b border-gray-200">
-                        <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black !leading-tight mb-6
-                                   article-title bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500">
-                            SwahiliPro: A Framework for Linguistically-Aware Swahili Large Language Model Fine-tuning
-                        </h1>
-                        <p class="text-xl md:text-2xl text-gray-700 mt-4 max-w-2xl mx-auto leading-relaxed font-sans">
-                            An end-to-end pipeline to imbue Large Language Models with a deep, structural understanding of Swahili's rich morphology, pro-drop phenomena, and code-switching contexts.
-                        </p>
-                    </header>
+        <!-- Section Heading -->
+        <h2 class="text-22px font-bold text-[#ff5e3a] border-b-2 border-[#ff5e3a] pb-2 mt-12 mb-6">
+            3. The Proposed Solution: SwahiliMaalumLM Architectural Deep Dive
+        </h2>
+        <p class="mb-4 text-15px">
+            The proposed solution is a modular, three-phase pipeline that transforms raw data into a linguistically-aware, fine-tuned LLM.
+        </p>
+        <h3 class="text-18px font-bold text-[#ff5e3a] mt-8 mb-4">
+            Phase 1: The Linguistic Foundation Pipeline (Data Preparation)
+        </h3>
+        <p class="mb-4 text-15px">
+            This is the heart of the framework's innovation, where raw text is enriched with explicit linguistic structure. The process begins with <span class="font-bold">Stage 1: Raw Processing & Intelligent Task Flagging</span>. Here, raw text is cleaned and subjected to a two-tier flagging system. A fast regex-based check first identifies potential candidates for pro-drop or code-switching. These candidates are then passed to a more sophisticated SwahiliAnnotator for detailed analysis (e.g., POS-based confirmation), optimizing processing time. The output is a clean, intermediate dataset where each entry is flagged with the specialized tasks it is suitable for (e.g., ["general_lm", "code_switch_candidate"]).
+        </p>
+        <p class="mb-4 text-15px">
+            Next is <span class="font-bold">Stage 2: Feature Generation & Critical Index Mapping (Novelty Core)</span>. A key principle is <span class="font-bold">Tokenizer Consistency</span>, where a base Hugging Face tokenizer is loaded once, its special tokens are configured (e.g., adding <span class="font-bold"><sep></span>), and this exact instance is saved. This single, consistent tokenizer instance becomes the source of truth for all downstream processes, eliminating a common source of error. <span class="font-bold">Task-Specific Data Synthesis</span> is then performed. For <span class="font-bold">Morphology</span>, the SwahiliAnnotator uses a segmentation model (e.g., a custom-trained Morfessor) to insert morpheme boundaries with a special <span class="font-bold"><sep></span> token (<span class="font-bold">a<sep>ta<sep>ni<sep>penda</span>). This makes the sub-word structure explicit to the LLM. For <span class="font-bold">Pronoun-Drop (Experimental)</span>, heuristics identify a pronoun and its associated verb. A new sentence is created with the pronoun removed, and this new sentence is re-annotated to reliably find the character offsets of the verb in its new position. The character offsets are then mapped to the final token indices in the fully tokenized sequence. The output is a JSONL entry containing the morpheme-marked sentence without the pronoun, along with the token indices of the key verb (<span class="font-bold">verb_token_indices_mapped</span>) and a label for the dropped pronoun (<span class="font-bold">pronoun_label_id</span>). For <span class="font-bold">Code-Switching</span>, a Swahili word is replaced with its English equivalent. Two parallel sentences are created: the morpheme-marked CS sentence (<span class="font-bold">cs_sentence_marked</span>) and the morpheme-marked original Swahili sentence (<span class="font-bold">sw_equivalent_marked</span>). The character spans for the English term (in the CS sentence) and the original Swahili term (in the Swahili sentence) are found and mapped to their respective token indices. The output is a JSONL entry with both sentences and their corresponding token index spans (<span class="font-bold">cs_span_token_indices_mapped</span> and <span class="font-bold">sw_span_token_indices_mapped</span>).
+        </p>
 
-                    <div class="prose prose-2xl prose-slate max-w-none text-gray-900
-                                  prose-blockquote:mt-10 prose-blockquote:mb-10
-                                  prose-blockquote:pl-8 prose-blockquote:pr-6 prose-blockquote:py-6
-                                  prose-blockquote:border-l-4 prose-blockquote:border-blue-500 /* Specified for this article's blockquote */
-                                  prose-blockquote:bg-gradient-to-r prose-blockquote:from-blue-50 prose-blockquote:via-sky-50 prose-blockquote:to-cyan-50
-                                  prose-blockquote:text-gray-800 prose-blockquote:italic
-                                  prose-blockquote:rounded-r-xl prose-blockquote:shadow-lg
-                                  prose-a:text-indigo-600 hover:prose-a:text-indigo-700 prose-a:font-semibold prose-a:no-underline hover:prose-a:underline
-                                  prose-headings:font-serif prose-headings:text-transparent prose-headings:bg-clip-text prose-headings:bg-gradient-to-r prose-headings:from-purple-600 prose-headings:to-indigo-600 prose-headings:pb-3 prose-headings:border-b prose-headings:border-gray-300 prose-headings:mb-6 prose-headings:mt-12
-                                  prose-code:font-mono prose-code:text-purple-700 prose-code:bg-purple-50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:text-[0.9em] prose-code:font-medium
-                                  prose-ul:list-disc prose-ul:pl-8 prose-ul:space-y-4 prose-ul:my-8
-                                  prose-li:pl-3">
-                        <h2>1. Project Vision & Motivation</h2>
-                        <p>Large Language Models (LLMs) have demonstrated remarkable capabilities, yet they often falter when applied to morphologically rich languages (MRLs) like Swahili. Standard subword tokenization algorithms, designed for English, tend to fracture Swahili's complex, agglutinative words into non-meaningful units, preventing the model from grasping the intricate grammatical relationships encoded within them.</p>
-                        <p><strong>SwahiliPro</strong> is a proposed research and development framework designed to tackle this challenge head-on. The vision is not merely to build another Swahili model, but to engineer a principled, end-to-end pipeline that systematically teaches an LLM the fundamental linguistic structures of Swahili. This project moves beyond surface-level text processing to fine-tune a model that understands the why behind the words—how morphemes combine to create meaning, how context implies missing pronouns, and how to navigate the fluid boundary between Swahili and English in real-world usage.</p>
+        <h3 class="text-18px font-bold text-[#ff5e3a] mt-8 mb-4">
+            Phase 2: Phased Adaptation & Custom Learning (LLM Fine-tuning)
+        </h3>
+        <p class="mb-4 text-15px">
+            This phase uses the richly annotated data to fine-tune an LLM with surgical precision using PEFT (QLoRA). The <span class="font-bold">Model Architecture</span> starts with a base LLM augmented with LoRA adapters and a small, trainable <span class="font-bold">ContextualSubjectHead</span>—a classification layer designed specifically for the pro-drop task. A <span class="font-bold">Phased Training Strategy (Novelty Core)</span> is employed. In <span class="font-bold">Phase 1 (Morphology Focus)</span>, the model is first trained only on the standard Causal LM objective using the morpheme-marked (<span class="font-bold"><sep></span>) text. The goal is to first teach the model the "new vocabulary" and structure of segmented Swahili. Only a <span class="font-bold">morph_adapter</span> is trained; the task-specific adapter and head are frozen. In <span class="font-bold">Phase 2 (Task Focus)</span>, the <span class="font-bold">morph_adapter</span> is frozen but kept active. A second <span class="font-bold">task_adapter</span> and the ContextualSubjectHead are unfrozen. The model is now trained on a combined loss function. This <span class="font-bold">Dual Custom Loss Function (Novelty Core)</span> includes a <span class="font-bold">Base Causal LM Loss</span>, which is the standard "predict the next token" loss, now benefiting from the explicit morphological markers. It also includes a <span class="font-bold">Subject Prediction Loss</span>, where the embeddings at the <span class="font-bold">verb_token_indices_mapped</span> are pooled and fed into the ContextualSubjectHead. A cross-entropy loss is calculated against the <span class="font-bold">pronoun_label_id</span>, explicitly teaching the model to predict the dropped subject from the verb's context. Finally, a <span class="font-bold">Code-Switch Alignment Loss</span> uses the <span class="font-bold">cs_span_token_indices_mapped</span> and <span class="font-bold">sw_span_token_indices_mapped</span> to pool the embeddings for the English term and its Swahili equivalent (requiring an auxiliary forward pass on the Swahili text). A cosine similarity loss then "pulls" these two representations closer together in the model's embedding space, teaching it semantic equivalence.
+        </p>
 
-                        <h2>2. The Core Problem Statement</h2>
-                        <p>The framework is architected to address three specific, high-impact challenges in Swahili NLP:</p>
-                        <ul>
-                            <li><strong>Morphological Blindness:</strong> Swahili words can contain a root, multiple prefixes, and suffixes that denote tense, aspect, subject, and object. For example, <code>atanipenda</code> ("he/she will love me") is a single word containing four distinct morphemes (<code>a-ta-ni-penda</code>). Standard tokenizers might split this as <code>at</code>, <code>ani</code>, <code>penda</code>, losing the grammatical information.</li>
-                            <li><strong>Contextual Ambiguity (Pro-Drop):</strong> Swahili is a pro-drop language where subject pronouns are often omitted because the subject is marked on the verb itself (e.g., <code>ninakula</code> for "I am eating"). A standard LLM struggles to infer the dropped subject, a critical task for true comprehension and coherent generation.</li>
-                            <li><strong>Code-Switching (CS) Reality:</strong> In modern digital and spoken Swahili, code-switching with English is ubiquitous. An effective model must not only recognize both languages but also develop aligned representations, understanding that <code>gari</code> and <code>car</code> can be semantically equivalent in the same context.</li>
-                        </ul>
-                        <p><strong>NLP Tooling Scarcity:</strong> Unlike high-resource languages, there is no single, comprehensive, state-of-the-art toolkit for Swahili linguistic analysis. A practical solution requires a pragmatic, composite approach, intelligently combining the best available tools.</p>
+        <h3 class="text-18px font-bold text-[#ff5e3a] mt-8 mb-4">
+            Phase 3: Evaluation & Inference
+        </h3>
+        <p class="mb-4 text-15px">
+            The final phase involves <span class="font-bold">Evaluation</span>, where the model is evaluated on both standard metrics (Perplexity) and task-specific metrics (Subject Prediction Accuracy, CS Embedding Similarity). This provides a holistic view of its acquired linguistic capabilities. For <span class="font-bold">Inference</span>, the final model can be used for generation, with input prompts being passed through the same SwahiliAnnotator to ensure consistency with the training data.
+        </p>
 
-                        <h2>3. The Proposed Solution: SwahiliMaalumLM Architectural Deep Dive</h2>
-                        <p>The proposed solution is a modular, three-phase pipeline that transforms raw data into a linguistically-aware, fine-tuned LLM.</p>
+        <!-- Section Heading -->
+        <h2 class="text-22px font-bold text-[#ff5e3a] border-b-2 border-[#ff5e3a] pb-2 mt-12 mb-6">
+            4. Innovations & Novel Contributions
+        </h2>
+        <p class="mb-4 text-15px">
+            This framework's novelty lies in its systematic, linguistically-informed approach. The <span class="font-bold">Composite Linguistic Annotator</span> is a pragmatic SwahiliAnnotator that combines multiple off-the-shelf tools (Morfessor, Polyglot, HF POS Taggers, UniMorph) to create a robust annotation pipeline, addressing the real-world scarcity of a single, perfect tool for Swahili. The <span class="font-bold">Systematic Data Representation for Linguistics</span> is another key innovation—the creation of structured JSONL files with pre-calculated, validated character-to-token index mappings for specific linguistic phenomena. This is a robust data engineering approach crucial for complex training regimes. The <span class="font-bold">Phased PEFT Training Strategy</span> is a novel training methodology that stabilizes learning on structurally modified text before introducing more complex, multi-objective tasks. The <span class="font-bold">Multi-Objective Custom Loss Function</span> is a unique combination of a standard Causal LM loss with a classification loss (for pro-drop) and a contrastive/similarity loss (for code-switching) within a single training loop, allowing the model to learn diverse linguistic skills simultaneously. Finally, the <span class="font-bold">End-to-End Consistency</span> achieved by the rigorous enforcement of a single, saved tokenizer and consistent configuration flow from data preparation through to inference represents a mature and robust MLOps practice, critical for reproducibility and reliability.
+        </p>
 
-                        <h3>Phase 1: The Linguistic Foundation Pipeline (Data Preparation)</h3>
-                        <p>This is the heart of the framework's innovation, where raw text is enriched with explicit linguistic structure.</p>
+        <!-- Section Heading -->
+        <h2 class="text-22px font-bold text-[#ff5e3a] border-b-2 border-[#ff5e3a] pb-2 mt-12 mb-6">
+            5. Technical Stack
+        </h2>
+        <ul class="list-disc list-inside mb-4 text-15px">
+            <li><span class="font-bold">Language:</span> Python</li>
+            <li><span class="font-bold">Core Libraries:</span> PyTorch, Hugging Face (Transformers, PEFT, Accelerate, Tokenizers)</li>
+            <li><span class="font-bold">NLP Tools:</span> Morfessor, Polyglot, UniMorph-Inflect</li>
+            <li><span class="font-bold">Data Handling:</span> Pandas, PyYAML</li>
+            <li><span class="font-bold">Infrastructure:</span> High-Performance Computing (HPC) cluster with GPUs (A100/H100)</li>
+        </ul>
 
-                        <h4>Stage 1: Raw Processing & Intelligent Task Flagging</h4>
-                        <p><strong>Logic:</strong> Raw text is cleaned and subjected to a two-tier flagging system. A fast regex-based check first identifies potential candidates for pro-drop or code-switching. These candidates are then passed to a more sophisticated <code>SwahiliAnnotator</code> for detailed analysis (e.g., POS-based confirmation), optimizing processing time.</p>
-                        <p><strong>Output:</strong> A clean, intermediate dataset where each entry is flagged with the specialized tasks it is suitable for (e.g., <code>["general_lm", "code_switch_candidate"]</code>).</p>
-
-                        <h4>Stage 2: Feature Generation & Critical Index Mapping (Novelty Core)</h4>
-                        <p><strong>Tokenizer Consistency:</strong> A base Hugging Face tokenizer is loaded once, its special tokens are configured (e.g., adding <code>&lt;sep&gt;</code>), and this exact instance is saved. This single, consistent tokenizer instance becomes the source of truth for all downstream processes, eliminating a common source of error.</p>
-                        <p><strong>Task-Specific Data Synthesis:</strong></p>
-                        <ul>
-                            <li>For <strong>Morphology:</strong> The <code>SwahiliAnnotator</code> uses a segmentation model (e.g., a custom-trained Morfessor) to insert morpheme boundaries with a special <code>&lt;sep&gt;</code> token (<code>a&lt;sep&gt;ta&lt;sep&gt;ni&lt;sep&gt;penda</code>). This makes the sub-word structure explicit to the LLM.</li>
-                            <li>For <strong>Pronoun-Drop (Experimental):</strong>
-                                <ul>
-                                    <li>Heuristics identify a pronoun and its associated verb.</li>
-                                    <li>A new sentence is created with the pronoun removed.</li>
-                                    <li>This new sentence is re-annotated to reliably find the character offsets of the verb in its new position.</li>
-                                    <li>The character offsets are then mapped to the final token indices in the fully tokenized sequence.</li>
-                                </ul>
-                                <p><strong>Output:</strong> A JSONL entry containing the morpheme-marked sentence without the pronoun, along with the token indices of the key verb (<code>verb_token_indices_mapped</code>) and a label for the dropped pronoun (<code>pronoun_label_id</code>).</p>
-                            </li>
-                            <li>For <strong>Code-Switching:</strong>
-                                <ul>
-                                    <li>A Swahili word is replaced with its English equivalent.</li>
-                                    <li>Two parallel sentences are created: the morpheme-marked CS sentence (<code>cs_sentence_marked</code>) and the morpheme-marked original Swahili sentence (<code>sw_equivalent_marked</code>).</li>
-                                    <li>The character spans for the English term (in the CS sentence) and the original Swahili term (in the Swahili sentence) are found and mapped to their respective token indices.</li>
-                                </ul>
-                                <p><strong>Output:</strong> A JSONL entry with both sentences and their corresponding token index spans (<code>cs_span_token_indices_mapped</code> and <code>sw_span_token_indices_mapped</code>).</p>
-                            </li>
-                        </ul>
-
-                        <h3>Phase 2: Phased Adaptation & Custom Learning (LLM Fine-tuning)</h3>
-                        <p>This phase uses the richly annotated data to fine-tune an LLM with surgical precision using PEFT (QLoRA).</p>
-
-                        <h4>Model Architecture:</h4>
-                        <p>A base LLM is augmented with LoRA adapters and a small, trainable <code>ContextualSubjectHead</code>—a classification layer designed specifically for the pro-drop task.</p>
-
-                        <h4>Phased Training Strategy (Novelty Core):</h4>
-                        <ul>
-                            <li><strong>Phase 1 (Morphology Focus):</strong> The model is first trained only on the standard Causal LM objective using the morpheme-marked (<code>&lt;sep&gt;</code>) text. The goal is to first teach the model the "new vocabulary" and structure of segmented Swahili. Only a <code>morph_adapter</code> is trained; the task-specific adapter and head are frozen.</li>
-                            <li><strong>Phase 2 (Task Focus):</strong> The <code>morph_adapter</code> is frozen but kept active. A second <code>task_adapter</code> and the <code>ContextualSubjectHead</code> are unfrozen. The model is now trained on a combined loss function.</li>
-                        </ul>
-
-                        <h4>Dual Custom Loss Function (Novelty Core):</h4>
-                        <ul>
-                            <li><strong>Base Causal LM Loss:</strong> The standard "predict the next token" loss, which now benefits from the explicit morphological markers.</li>
-                            <li><strong>Subject Prediction Loss:</strong> The embeddings at the <code>verb_token_indices_mapped</code> are pooled and fed into the <code>ContextualSubjectHead</code>. A cross-entropy loss is calculated against the <code>pronoun_label_id</code>, explicitly teaching the model to predict the dropped subject from the verb's context.</li>
-                            <li><strong>Code-Switch Alignment Loss:</strong> Using the <code>cs_span_token_indices_mapped</code> and <code>sw_span_token_indices_mapped</code>, the framework pools the embeddings for the English term and its Swahili equivalent (requiring an auxiliary forward pass on the Swahili text). A cosine similarity loss then "pulls" these two representations closer together in the model's embedding space, teaching it semantic equivalence.</li>
-                        </ul>
-
-                        <h3>Phase 3: Evaluation & Inference</h3>
-                        <p><strong>Evaluation:</strong> The model is evaluated on both standard metrics (Perplexity) and task-specific metrics (Subject Prediction Accuracy, CS Embedding Similarity). This provides a holistic view of its acquired linguistic capabilities.</p>
-                        <p><strong>Inference:</strong> The final model can be used for generation, with input prompts being passed through the same <code>SwahiliAnnotator</code> to ensure consistency with the training data.</p>
-
-                        <h2>4. Innovations & Novel Contributions</h2>
-                        <p>This framework's novelty lies in its systematic, linguistically-informed approach:</p>
-                        <ul>
-                            <li><strong>Composite Linguistic Annotator:</strong> A pragmatic <code>SwahiliAnnotator</code> that combines multiple off-the-shelf tools (Morfessor, Polyglot, HF POS Taggers, UniMorph) to create a robust annotation pipeline, addressing the real-world scarcity of a single, perfect tool for Swahili.</li>
-                            <li><strong>Systematic Data Representation for Linguistics:</strong> The creation of structured JSONL files with pre-calculated, validated character-to-token index mappings for specific linguistic phenomena. This is a robust data engineering approach crucial for complex training regimes.</li>
-                            <li><strong>Phased PEFT Training Strategy:</strong> The "Morphology First, Tasks Second" approach is a novel training methodology that stabilizes learning on structurally modified text before introducing more complex, multi-objective tasks.</li>
-                            <li><strong>Multi-Objective Custom Loss Function:</strong> The combination of a standard Causal LM loss with a classification loss (for pro-drop) and a contrastive/similarity loss (for code-switching) within a single training loop allows the model to learn diverse linguistic skills simultaneously.</li>
-                            <li><strong>End-to-End Consistency:</strong> The rigorous enforcement of a single, saved tokenizer and consistent configuration flow from data preparation through to inference represents a mature and robust MLOps practice, critical for reproducibility and reliability.</li>
-                        </ul>
-
-                        <h2>5. Technical Stack</h2>
-                        <ul>
-                            <li><strong>Language:</strong> Python</li>
-                            <li><strong>Core Libraries:</strong> PyTorch, Hugging Face (Transformers, PEFT, Accelerate, Tokenizers)</li>
-                            <li><strong>NLP Tools:</strong> Morfessor, Polyglot, UniMorph-Inflect</li>
-                            <li><strong>Data Handling:</strong> Pandas, PyYAML</li>
-                            <li><strong>Infrastructure:</strong> High-Performance Computing (HPC) cluster with GPUs (A100/H100)</li>
-                        </ul>
-
-                        <h2>6. Project Status & Future Directions</h2>
-                        <p><strong>Status:</strong> Proposed Research & Development. The framework is fully designed, and the component logic is specified.</p>
-                        <p><strong>Next Steps:</strong></p>
-                        <ul>
-                            <li><strong>Implementation:</strong> Build out the data preparation and training scripts based on the detailed architecture.</li>
-                            <li><strong>Baseline Experiments:</strong> Run initial experiments focusing on the impact of morphological segmentation alone.</li>
-                            <li><strong>Full Model Training:</strong> Execute the full phased training with the dual custom losses on a comprehensive Swahili corpus (e.g., WURA).</li>
-                            <li><strong>Analysis & Publication:</strong> Thoroughly analyze the results and prepare a research paper for submission to a top-tier NLP conference (e.g., ACL, EMNLP, NeurIPS).</li>
-                        </ul>
-                    </div>
-
-                    <footer class="mt-16 md:mt-20 pt-10 md:pt-12 border-t border-gray-300">
-                        <div class="text-center">
-                            <a href="/index.html#insights-frameworks" class="text-indigo-700 hover:text-purple-600 transition-colors inline-flex items-center group text-base font-medium">
-                                <svg class="w-5 h-5 mr-2 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                                Back to Insights & Blog
-                            </a>
-                        </div>
-                    </footer>
-                </article>
-            </div>
-        </div>
-    </main>
-
-    <a href="/index.html#insights-frameworks" class="fixed bottom-6 right-6 lg:bottom-8 lg:right-8 xl:bottom-10 xl:right-10
-              inline-flex items-center px-6 py-3 border border-transparent text-base font-medium
-              rounded-full shadow-lg text-white bg-indigo-600 hover:bg-indigo-700 transition duration-300
-              transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 z-40">
-        <svg class="-ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd" />
-        </svg>
-        Back to Insights & Blog
-    </a>
-
-    <footer class="bg-gray-800 text-white py-8 rounded-t-3xl shadow-inner">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-32 text-center md:flex md:justify-between md:items-center">
-            <p class="mb-4 md:mb-0">&copy; 2025 Stanley Ngugi. All rights reserved.</p>
-            <div class="flex justify-center space-x-6">
-                <a href="/index.html#about" class="hover:text-indigo-400 transition duration-300">About</a>
-                <a href="/index.html#research" class="hover:text-indigo-400 transition duration-300">Research</a>
-                <a href="/index.html#contact" class="hover:text-indigo-400 transition duration-300">Contact</a>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-
-            if (mobileMenuButton && mobileMenu) {
-                mobileMenuButton.addEventListener('click', function() {
-                    mobileMenu.classList.toggle('hidden');
-                });
-
-                // Close mobile menu when a link is clicked
-                mobileMenu.querySelectorAll('a').forEach(link => {
-                    link.addEventListener('click', () => {
-                        mobileMenu.classList.add('hidden');
-                    });
-                });
-            }
-            // No dynamic active state logic needed on this page, as 'Blog' or 'Insights' is always active.
-            // Dynamic highlighting belongs on index.html based on scroll position/hash.
-        });
-    </script>
+        <!-- Section Heading -->
+        <h2 class="text-22px font-bold text-[#ff5e3a] border-b-2 border-[#ff5e3a] pb-2 mt-12 mb-6">
+            6. Project Status & Future Directions
+        </h2>
+        <p class="mb-4 text-15px">
+            <span class="font-bold">Status:</span> Proposed Research & Development. The framework is fully designed, and the component logic is specified.
+        </p>
+        <p class="mb-4 text-15px">
+            <span class="font-bold">Next Steps:</span>
+        </p>
+        <ul class="list-disc list-inside mb-4 text-15px">
+            <li><span class="font-bold">Implementation:</span> Build out the data preparation and training scripts based on the detailed architecture.</li>
+            <li><span class="font-bold">Baseline Experiments:</span> Run initial experiments focusing on the impact of morphological segmentation alone.</li>
+            <li><span class="font-bold">Full Model Training:</span> Execute the full phased training with the dual custom losses on a comprehensive Swahili corpus (e.g., WURA).</li>
+        </ul>
+    </div>
 </body>
 </html>

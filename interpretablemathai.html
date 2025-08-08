@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interpretable Mathematical Image Generation via AI Discovery</title>
+    <!-- Load JetBrains Mono font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Load Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load KaTeX for LaTeX rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" xintegrity="sha384-wcIx8eH6J4z8388U/m8U8R9/bI7dJ6v/16oB/d+y2eD8p1i5p5b8y..." crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" xintegrity="sha384-F1qf5qF/e8gV/n8R3z3f5G..." crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" xintegrity="sha384-M0x9c35zG5z9x9g8y3R3z8H9y..." crossorigin="anonymous"></script>
+    <style>
+        /* Apply JetBrains Mono to the entire body */
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: #1b1d2e; /* Deep navy/charcoal background */
+            color: #e8e8e8; /* Off-white gray for primary text */
+            line-height: 1.65; /* Default line height for body text */
+        }
+
+        /* Custom utility for precise font sizes if Tailwind defaults aren't exact */
+        .text-13px { font-size: 13px; }
+        .text-15px { font-size: 15px; }
+        .text-18px { font-size: 18px; }
+        .text-22px { font-size: 22px; }
+
+        /* Ensure links don't have default underlines or hover effects */
+        a {
+            text-decoration: none;
+        }
+
+        /* Adjust KaTeX to fit the minimalist tone */
+        .katex {
+            font-size: 1em; /* Ensure inline math doesn't look oversized */
+        }
+    </style>
+</head>
+<body class="bg-[#1b1d2e] text-[#e8e8e8]">
+    <div class="max-w-3xl mx-auto p-8">
+        <!-- Title (paper/article) -->
+        <h1 class="text-22px font-bold text-[#ff5e3a] text-center mb-4">
+            Interpretable Mathematical Image Generation via AI Discovery
+        </h1>
+
+        <!-- Author + Meta (preprint, date) -->
+        <p class="text-13px font-normal text-[#999999] leading-[1.2] text-center mb-12">
+            By Stanley Ngugi, August 6th, 2025
+        </p>
+
+        <!-- The Vision -->
+        <h2 class="text-18px font-bold text-[#ff5e3a] mt-12 mb-6">
+            The Vision
+        </h2>
+        <p class="mb-4 text-15px">
+            To pioneer a new paradigm of AI-driven creative image generation, where beautiful, complex, and novel visuals are born directly from mathematically explicit formulas discovered and refined by artificial intelligence, with a strong emphasis on interpretability and control. This stands in contrast to the prevalent black-box, data-driven approaches like diffusion models.
+        </p>
+
+        <!-- The Inspiration -->
+        <h2 class="text-18px font-bold text-[#ff5e3a] mt-12 mb-6">
+            The Inspiration
+        </h2>
+        <p class="mb-4 text-15px">
+            The work of Hamid Naderi Yeganeh serves as a profound human precedent. He meticulously crafts stunning visual art using only mathematical equations (trigonometric functions, exponential, Fibonacci, etc.). His two methods – accidental discovery through vast generation, and deliberate step-by-step mathematical construction – offer a roadmap for how an AI could operate. Yeganeh himself emphasizes the unlimited power of mathematics in art and the beauty of having artworks completely described by mathematical concepts.
+        </p>
+
+        <!-- The Problem Your Research Addresses -->
+        <h2 class="text-18px font-bold text-[#ff5e3a] mt-12 mb-6">
+            The Problem Addressed by This Research (The "Why")
+        </h2>
+        <ul class="list-disc list-inside mb-4 text-15px">
+            <li><span class="font-bold">Black-Box Generative AI:</span> Current state-of-the-art generative models (diffusion, GANs) are incredibly powerful but fundamentally opaque. They learn complex, implicit representations of images, making it difficult to understand why they generate what they do, control them precisely at a conceptual level, or guarantee their behavior. This lack of interpretability is a major concern for trust, debugging, and broader adoption of AI.</li>
+            <li><span class="font-bold">Limited Intrinsic Creativity:</span> While current AI can remix and interpolate existing data to create "novel" variations, its creativity is often statistical and mimetic. It struggles with truly inventing new forms or new underlying principles that fall outside its training distribution.</li>
+            <li><span class="font-bold">Human Effort in Mathematical Art:</span> Artists like Yeganeh spend immense time manually exploring mathematical spaces and tweaking parameters. Automating this discovery process could democratize mathematical art and accelerate the discovery of new visual forms.</li>
+            <li><span class="font-bold">The Math-AI Divide:</span> Bridging the gap between the intuitive, pattern-recognition strengths of neural networks and the logical, symbolic reasoning capabilities of mathematics is a grand challenge in AI. This work directly tackles this.</li>
+        </ul>
+
+        <!-- Your Core Proposition -->
+        <h2 class="text-18px font-bold text-[#ff5e3a] mt-12 mb-6">
+            The Core Proposition (The "How")
+        </h2>
+        <p class="mb-4 text-15px">
+            The proposal is to develop an AI system, likely neuro-symbolic in nature, that:
+        </p>
+        <ul class="list-disc list-inside mb-4 text-15px">
+            <li><span class="font-bold">Discovers/Evolves Mathematical Formulas:</span> Instead of learning to map noise to pixels, the AI learns to generate or evolve mathematical expressions (e.g., equations involving trigonometry, fractals, complex numbers, series, procedural functions).</li>
+            <li><span class="font-bold">Neuro Component:</span> This could be used for:
+                <ul class="list-disc list-inside ml-8 text-15px">
+                    <li>Learning an "aesthetic critic" – a neural network trained to judge the visual appeal of generated mathematical plots (perhaps from human ratings or self-supervised signals based on visual properties).</li>
+                    <li>Guiding the search space – predicting promising regions of mathematical function space based on prior successes.</li>
+                    <li>Translating high-level artistic prompts into symbolic constraints.</li>
+                </ul>
+            </li>
+            <li><span class="font-bold">Symbolic Component:</span> This would be responsible for:
+                <ul class="list-disc list-inside ml-8 text-15px">
+                    <li>Representing and manipulating mathematical expressions (e.g., via symbolic regression, program synthesis).</li>
+                    <li>Performing mathematical reasoning and formal operations.</li>
+                    <li>Generating the actual plot from the derived formula.</li>
+                </ul>
+            </li>
+            <li><span class="font-bold">Prioritizes Interpretability by Design:</span> Because the output is a mathematical formula, the generation process is inherently transparent. The role of an interpretability research scientist is to:
+                <ul class="list-disc list-inside ml-8 text-15px">
+                    <li>Design for Readability: Focus on discovering simpler, more elegant mathematical forms that are easier for humans to understand and manipulate.</li>
+                    <li>Develop Explanation Frameworks: Create methods to explain why a particular mathematical form was chosen and how its mathematical properties relate to the visual output (e.g., "this sine wave creates the ripples," "this fractal dimension defines the texture").</li>
+                    <li>Evaluate Interpretability: Formally assess the interpretability of the generated mathematical art through user studies or new metrics.</li>
+                </ul>
+            </li>
+            <li><span class="font-bold">Aims for True Novelty and Creativity:</span> The goal isn't just to reproduce existing art but to:
+                <ul class="list-disc list-inside ml-8 text-15px">
+                    <li>Discover novel classes of mathematical functions that yield unforeseen but aesthetically pleasing patterns.</li>
+                    <li>Explore a vast, theoretically infinite space of mathematical forms, unconstrained by finite training data.</li>
+                    <li>Showcase "creative reasoning" by the AI in its ability to navigate abstract mathematical concepts for an artistic outcome.</li>
+                </ul>
+            </li>
+        </ul>
+
+        <!-- The Anticipated Advantages -->
+        <h2 class="text-18px font-bold text-[#ff5e3a] mt-12 mb-6">
+            The Anticipated Advantages (The "Benefits")
+        </h2>
+        <ul class="list-disc list-inside mb-4 text-15px">
+            <li><span class="font-bold">Unparalleled Interpretability and Control:</span> Full transparency into how the art is made, allowing for precise control and modification of every aspect of the image through its underlying equations. This addresses a major bottleneck in current generative AI.</li>
+            <li><span class="font-bold">Genuine Mathematical Creativity:</span> The AI acts as a mathematical explorer, potentially discovering new functions, theorems, or mathematical relationships that also happen to produce beautiful art. This elevates AI's role to a true co-discoverer.</li>
+            <li><span class="font-bold">Foundational Contributions to AI and Mathematics:</span> Pushing the boundaries of neuro-symbolic AI, program synthesis, and AI for mathematical discovery, with a tangible and visually compelling application.</li>
+            <li><span class="font-bold">Resolution Independence and Efficiency:</span> Mathematical art is inherently scalable to any resolution and often represented very compactly, leading to efficiencies in storage and rendering.</li>
+            <li><span class="font-bold">New Artistic Avenues:</span> Opening up entirely new styles and forms of art rooted in mathematical elegance, fostering collaboration between artists, mathematicians, and AI researchers.</li>
+        </ul>
+
+        <!-- The Challenges -->
+        <h2 class="text-18px font-bold text-[#ff5e3a] mt-12 mb-6">
+            The Challenges (The "Obstacles")
+        </h2>
+        <ul class="list-disc list-inside mb-4 text-15px">
+            <li><span class="font-bold">Defining and Quantifying "Aesthetics":</span> How does one build an AI that "knows" what looks good without explicit human training data on every possible mathematical output? This requires sophisticated reward functions or aesthetic critics.</li>
+            <li><span class="font-bold">Vastness of Search Space:</span> The space of all possible mathematical functions is enormous. Efficiently navigating it to find aesthetically valuable expressions is computationally demanding.</li>
+            <li><span class="font-bold">Complexity of Realism:</span> Generating photorealistic, arbitrary objects purely from mathematical formulas remains incredibly difficult, requiring immense mathematical sophistication. The initial focus will likely be on abstract, geometric, or stylized art.</li>
+            <li><span class="font-bold">Bridging the Neuro-Symbolic Gap Effectively:</span> Making the neural and symbolic components communicate seamlessly and learn synergistically is a complex engineering and research problem.</li>
+        </ul>
+    </div>
+</body>
+</html>

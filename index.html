@@ -67,6 +67,7 @@
             <!-- Navigation Links -->
             <div class="hidden md:flex space-x-6">
                 <a href="#about" class="nav-link text-[var(--text-primary)] hover:text-[var(--accent)] font-medium transition duration-300 px-3 py-2 rounded-md">About</a>
+                <a href="#learning-journey" class="nav-link text-[var(--text-primary)] hover:text-[var(--accent)] font-medium transition duration-300 px-3 py-2 rounded-md">Journey</a>
                 <a href="#research" class="nav-link text-[var(--text-primary)] hover:text-[var(--accent)] font-medium transition duration-300 px-3 py-2 rounded-md">Research</a>
                 <a href="#publications" class="nav-link text-[var(--text-primary)] hover:text-[var(--accent)] font-medium transition duration-300 px-3 py-2 rounded-md">Publications</a>
                 <a href="#insights-frameworks" class="nav-link text-[var(--text-primary)] hover:text-[var(--accent)] font-medium transition duration-300 px-3 py-2 rounded-md">Insights</a>
@@ -86,6 +87,7 @@
         <!-- Mobile Menu (Hidden by default) -->
         <div id="mobile-menu" class="hidden md:hidden bg-[var(--bg-color)] mt-2 px-4 py-2 space-y-2 border-t border-[var(--text-secondary)]">
             <a href="#about" class="nav-link block text-[var(--text-primary)] hover:bg-gray-800 px-3 py-2 rounded-md">About</a>
+            <a href="#learning-journey" class="nav-link block text-[var(--text-primary)] hover:bg-gray-800 px-3 py-2 rounded-md">Journey</a>
             <a href="#research" class="nav-link block text-[var(--text-primary)] hover:bg-gray-800 px-3 py-2 rounded-md">Research</a>
             <a href="#publications" class="nav-link block text-[var(--text-primary)] hover:bg-gray-800 px-3 py-2 rounded-md">Publications</a>
             <a href="#insights-frameworks" class="nav-link block text-[var(--text-primary)] hover:bg-gray-800 px-3 py-2 rounded-md">Insights</a>
@@ -138,6 +140,58 @@
             </div>
         </div>
     </section>
+
+    <!-- My Learning Journey Section -->
+    <section id="learning-journey" class="py-12 md:py-16 lg:py-20 bg-[var(--bg-color)]">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+            <h2 class="text-3xl font-bold text-[var(--text-primary)] text-center mb-10 section-heading mx-auto">My Learning Journey</h2>
+            <div class="text-base leading-relaxed text-[var(--text-primary)] max-w-prose mx-auto mb-12">
+                <p class="mb-4">
+                    My journey into AI research has been a self-designed pursuit of deep understanding. It's a testament to the fact that expertise is built not in a straight line, but through a constant cycle of learning, application, and critical reflection. Central to this process has been the strategic use of AI itself. I didn't just learn about AI; I learned with it, using advanced language models for dialogue and deep interrogation. This collaborative approach accelerated my path from a self-taught practitioner to a first-principles researcher.
+                </p>
+                <p>
+                    The documents that follow are not an exhaustive list of all I know, but a synthesis of my learning philosophy and a showcase of how I’ve applied it to build a robust foundation in AI research.
+                </p>
+            </div>
+            <!-- New stylish, card-based layout for the learning journey -->
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Phase I Card -->
+                <div class="bg-gray-800 p-6 rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300">
+                    <div class="text-[var(--accent)] font-bold text-2xl mb-4">Phase I</div>
+                    <h3 class="text-xl font-bold text-[var(--text-primary)] mb-2">The Catalyst</h3>
+                    <p class="text-[var(--text-secondary)] text-sm mb-4 line-clamp-4">
+                        I reverse-engineered code to build a deep, practical foundation.
+                    </p>
+                    <a href="path1.html" class="text-[var(--accent)] hover:underline font-medium inline-block">
+                        View Document <span aria-hidden="true">&rarr;</span>
+                    </a>
+                </div>
+                <!-- Phase II Card -->
+                <div class="bg-gray-800 p-6 rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300">
+                    <div class="text-[var(--accent)] font-bold text-2xl mb-4">Phase II</div>
+                    <h3 class="text-xl font-bold text-[var(--text-primary)] mb-2">The Researcher's Compass</h3>
+                    <p class="text-[var(--text-secondary)] text-sm mb-4 line-clamp-4">
+                        I designed a curriculum to transition into a first-principles researcher.
+                    </p>
+                    <a href="path2.html" class="text-[var(--accent)] hover:underline font-medium inline-block">
+                        View Document <span aria-hidden="true">&rarr;</span>
+                    </a>
+                </div>
+                <!-- Phase III Card -->
+                <div class="bg-gray-800 p-6 rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300">
+                    <div class="text-[var(--accent)] font-bold text-2xl mb-4">Phase III</div>
+                    <h3 class="text-xl font-bold text-[var(--text-primary)] mb-2">A Deep Dive into Interpretability</h3>
+                    <p class="text-[var(--text-secondary)] text-sm mb-4 line-clamp-4">
+                        I apply a systematic methodology to build safe and transparent AI.
+                    </p>
+                    <a href="path3.html" class="text-[var(--accent)] hover:underline font-medium inline-block">
+                        View Document <span aria-hidden="true">&rarr;</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
 
     <!-- Research Section: Key Research Areas -->
     <section id="research" class="py-12 md:py-16 lg:py-20 bg-[var(--bg-color)]">
@@ -199,7 +253,7 @@
                     <p class="text-[var(--text-primary)] text-base max-w-prose">
                         <span class="font-medium">Abstract:</span> This paper proposes the "High-Dimensional Divide" as a theoretical framework to analyze the fundamental divergence between human and artificial cognition, arguing that the emergence of AI-native cognitive languages presents a profound challenge to interpretability and alignment.
                     </p>
-                    <a href="files/pub-bridging-divide.html" class="text-[var(--accent)] hover:underline font-medium mt-2 inline-block">
+                    <a href="#" class="text-[var(--accent)] hover:underline font-medium mt-2 inline-block">
                         View Paper <span aria-hidden="true">&rarr;</span>
                     </a>
                 </div>
@@ -218,7 +272,7 @@
                     <p class="text-[var(--text-primary)] text-base max-w-prose">
                         <span class="font-medium">Abstract:</span> This paper introduces the WYIIWYG (What You Imagine Is What You Get) framework for engineering management, providing a strategic blueprint for transitioning from direct execution to imagination-driven human-AI collaboration while leveraging Organizational Legibility to bridge human intent and AI execution.
                     </p>
-                    <a href="files/pub-wyiiwyg.html" class="text-[var(--accent)] hover:underline font-medium mt-2 inline-block">
+                    <a href="#" class="text-[var(--accent)] hover:underline font-medium mt-2 inline-block">
                         View Paper <span aria-hidden="true">&rarr;</span>
                     </a>
                 </div>
@@ -269,7 +323,7 @@
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
             <h2 class="text-3xl font-bold text-[var(--text-primary)] text-center mb-10 section-heading mx-auto">Research Insights</h2>
             <div class="space-y-8">
-                <!-- New Insight 1 -->
+                <!-- New Insight 1 (Top) -->
                 <div class="py-6 border-b border-[var(--text-secondary)]">
                     <h3 class="text-xl font-bold text-[var(--accent)] mb-2">
                         Interpretable Mathematical Image Generation via AI Discovery
@@ -284,11 +338,11 @@
                     <p class="text-[var(--text-primary)] text-base max-w-prose">
                         <span class="font-medium">Description:</span> This conceptual framework outlines an interpretable, neuro-symbolic AI system designed to discover novel mathematical formulas for aesthetic image generation, moving beyond black-box, data-driven approaches.
                     </p>
-                    <a href="interpretablemathai.html" class="text-[var(--accent)] hover:underline font-medium mt-2 inline-block">
+                    <a href="files/interpretablemathai.md" class="text-[var(--accent)] hover:underline font-medium mt-2 inline-block">
                         View Details <span aria-hidden="true">&rarr;</span>
                     </a>
                 </div>
-                <!-- Remaining Insight 1 -->
+                <!-- Remaining Insight: Continuously Adapting Reflective Intelligence (CARI) -->
                 <div class="py-6 border-b border-[var(--text-secondary)]">
                     <h3 class="text-xl font-bold text-[var(--accent)] mb-2">
                         Continuously Adapting Reflective Intelligence (CARI): A Proposed Framework for Lifelong LLM Learning
@@ -304,7 +358,7 @@
                         View Details <span aria-hidden="true">&rarr;</span>
                     </a>
                 </div>
-                <!-- Remaining Insight 2 -->
+                <!-- Remaining Insight: SwahiliPro -->
                 <div class="py-6 border-b border-[var(--text-secondary)]">
                     <h3 class="text-xl font-bold text-[var(--accent)] mb-2">
                         SwahiliPro: Unveiling Swahili's Linguistic Soul in Large Language Models
@@ -382,12 +436,8 @@
                     <h3 class="text-xl font-bold text-[var(--accent)] mb-2">
                         The Unseen Power: Reclaiming the Wisdom of Our Common Senses
                     </h3>
-                    <p class="text-[var(--text-secondary)] text-sm mb-1">
-                        <span class="font-medium">Category:</span> Cognition & AI
-                        <span class="font-medium">Date Published:</span> May 5, 2025
-                    </p>
                     <p class="text-[var(--text-primary)] text-base max-w-prose">
-                        <span class="font-medium">Summary:</span> Our common senses are often overlooked, yet they hold profound power as direct gateways to understanding, connection, and spiritual insight. Rediscover the innate wisdom embedded in everyday perception.
+                        <span class="font-medium">Summary:</span> Our common senses are often overlooked, yet they hold profound power as direct gateways to understanding, connection, and spiritual insight.
                     </p>
                     <a href="files/blog-unseen-power.html" class="text-[var(--accent)] hover:underline font-medium mt-2 inline-block">
                         Read More <span aria-hidden="true">&rarr;</span>
@@ -476,6 +526,7 @@
                 <a href="#contact" class="hover:text-[var(--accent)] transition duration-300">Contact</a>
             </div>
         </div>
+    </div>
     </footer>
 
     <!-- JavaScript for Mobile Menu Toggle and Contact Form -->
@@ -624,5 +675,3 @@
     </script>
 </body>
 </html>
-
-

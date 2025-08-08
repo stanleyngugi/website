@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Structured Approach to Mastering Mechanistic Interpretability</title>
+    <!-- Load JetBrains Mono font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Load Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Apply JetBrains Mono to the entire body */
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: #1b1d2e; /* Deep navy/charcoal background */
+            color: #e8e8e8; /* Off-white gray for primary text */
+            line-height: 1.65; /* Default line height for body text */
+        }
+        /* Custom utility for precise font sizes if Tailwind defaults aren't exact */
+        .text-13px { font-size: 13px; }
+        .text-15px { font-size: 15px; }
+        .text-18px { font-size: 18px; }
+        .text-22px { font-size: 22px; }
+    </style>
+</head>
+<body class="bg-[#1b1d2e] text-[#e8e8e8]">
+    <div class="max-w-3xl mx-auto p-8">
+        <!-- Title -->
+        <h1 class="text-22px font-bold text-[#ff5e3a] text-center mb-4">
+            A Structured Approach to Mastering Mechanistic Interpretability
+        </h1>
+
+        <!-- Introduction -->
+        <p class="mb-4 text-15px">
+            My journey into the field of interpretability research began not with a formal curriculum, but with a fundamental question: what truly happens inside large language models? As a research scientist with a solid background in building and deploying these models, I was a master of their outputs, but a novice to their inner workings. This intellectual curiosity drove me to embark on a deliberate, self-designed journey of mastery—a journey defined by three core principles that now guide all of my research:
+        </p>
+        <ul class="list-disc list-inside mb-4 text-15px">
+            <li><strong>First-Principles Thinking:</strong> A relentless drive to break down complex systems into their irreducible, fundamental components. I refused to accept black-box functionality, instead seeking the underlying computational logic.</li>
+            <li><strong>Advanced Pattern Recognition:</strong> The ability to move beyond high-level behaviors to find order, structure, and semantic meaning in the high-dimensional chaos of a model's internal state, such as activation vectors and weight matrices.</li>
+            <li><strong>Semantic Understanding:</strong> The crucial ability to build a bridge between the mechanistic details of a model's computations and the human-interpretable concepts they represent. This is where the raw, technical data becomes meaningful insight.</li>
+        </ul>
+        <p class="mb-4 text-15px">
+            This document outlines the four phases of that journey, from building the right tools to developing a universal theoretical framework, culminating in a stance as a researcher uniquely positioned to advance the field.
+        </p>
+
+        <!-- Phase 1 -->
+        <h2 class="text-18px font-bold text-[#ff5e3a] mt-12 mb-6">
+            Phase 1: Building the Ultimate Microscope
+        </h2>
+        <p class="mb-4 text-15px">
+            My initial goal was to master the art of observing a model's internal computation. This phase was about acquiring the technical skills to deconstruct a model and understand its building blocks from the ground up. I needed to move beyond a high-level understanding of the Transformer architecture and achieve a master-level command of the tools that allow for deep introspection.
+        </p>
+        <p class="mb-4 text-15px">
+            I began with a deep deconstruction of the Transformer architecture, dissecting it layer by layer. I studied the linear algebra of the attention mechanism, understanding how it causally routes information from one part of the input to another. I did not simply learn what an MLP block does; I sought to understand how it acts as a key-value store, compressing and retrieving learned features. This was a process of relentless reverse-engineering.
+        </p>
+        <p class="mb-4 text-15px">
+            My primary vehicle for this exploration was the <strong>TransformerLens library</strong>. I moved beyond its basic usage to design complex, multi-layer hooks and interventions to test specific hypotheses about model behavior. I used these tools to investigate the fundamental problem of superposition, where a model encodes more features than it has neurons to represent. This led me to research techniques like <strong>Sparse Autoencoders (SAEs)</strong>, which offered a powerful solution to this problem by providing a framework to locate and analyze these individual features, even when they are superimposed. This work was critical in transitioning my mindset from observing circuits to understanding the individual concepts they represent.
+        </p>
+
+        <!-- Phase 2 -->
+        <h2 class="text-18px font-bold text-[#ff5e3a] mt-12 mb-6">
+            Phase 2: From Observation to Control
+        </h2>
+        <p class="mb-4 text-15px">
+            Having built my "microscope" in Phase 1, the next step was to move from passive observation to active, causal intervention. This phase was about transitioning from answering the question "What is the model doing?" to "If I change this part of the model, what will happen, and why?" This shift from correlation to causation is a hallmark of rigorous scientific inquiry.
+        </p>
+        <p class="mb-4 text-15px">
+            I grounded my approach in formal causal inference frameworks, recognizing that simple activation patching can be misleading. I researched and applied more rigorous methods, such as <strong>causal scrubbing</strong>, which allowed me to isolate the specific computational path responsible for a model's behavior and determine if it was truly necessary for that outcome. This provided a higher standard of proof for my findings.
+        </p>
+        <p class="mb-4 text-15px">
+            This phase had a specific, high-stakes application: <strong>AI safety</strong>. I applied my causal understanding to investigate the internal vulnerabilities that could lead to misaligned behaviors. I conducted deep dives into topics like <strong>AI deception</strong>, investigating how a model might learn to manipulate its output based on internal states. My work focused on identifying the specific circuits that encode and execute these behaviors, and then designing interventions to control or remove them. For example, I ran toy experiments to programmatically "steer" latent features identified by SAEs to change model output in a predictable and controlled manner. This work aligned my research directly with the priorities of leading AI safety organizations, demonstrating the practical importance of my skills.
+        </p>
+
+        <!-- Phase 3 -->
+        <h2 class="text-18px font-bold text-[#ff5e3a] mt-12 mb-6">
+            Phase 3: The Grand Unification
+        </h2>
+        <p class="mb-4 text-15px">
+            The third phase was about synthesizing the practical knowledge of the first two phases into a theoretical, abstract, and universal framework. I aimed to move beyond analyzing a single model's circuits and instead sought to discover the fundamental, model-agnostic principles that govern all neural computation.
+        </p>
+        <p class="mb-4 text-15px">
+            I broadened my studies to include fields like <strong>information theory, topology, and computational complexity</strong>. I connected concepts such as the <strong>Information Bottleneck Principle</strong> to explain why models learn to compress information in a specific way. I researched formalisms, such as <strong>Category Theory</strong>, to develop a more abstract language for describing neural computation that could apply to any architecture, not just Transformers. My research into axiomatic definitions of what constitutes a "good explanation" and the fundamental trade-offs between interpretability and performance allowed me to reason about the field’s open questions from a higher-level perspective.
+        </p>
+        <p class="mb-4 text-15px">
+            This phase was a journey into the philosophical heart of the field. It allowed me to see connections between seemingly disparate research papers and techniques, enabling me to build a unified mental model of how intelligence emerges in neural networks. This ability to reason from a first-principles, theoretical perspective is what separates a technician from a true expert.
+        </p>
+
+        <!-- Phase 4 -->
+        <h2 class="text-18px font-bold text-[#ff5e3a] mt-12 mb-6">
+            Phase 4: Impact and Communication
+        </h2>
+        <p class="mb-4 text-15px">
+            The final phase of my journey was dedicated to ensuring my technical insights could create real-world impact. It is not enough to simply find a circuit; one must be able to communicate its significance to a diverse audience, from fellow researchers to policy makers and regulators.
+        </p>
+        <p class="mb-4 text-15px">
+            I conducted research into <strong>cognitive biases</strong> and the science of explanation, focusing on how humans understand complex systems. This allowed me to move beyond simply generating explanations to designing them in a way that is ethical, reliable, and comprehensible. I sought to understand what makes an explanation useful, and how to present complex data in a way that is both faithful to the model's inner workings and accessible to a human user.
+        </p>
+        <p class="mb-4 text-15px">
+            Furthermore, my mechanistic understanding of how models encode concepts allowed me to approach ethical challenges, such as <strong>bias and fairness</strong>, at their root cause. I can not only identify that a model is biased, but I can point to the specific circuits responsible for that bias and propose targeted interventions. My active engagement in the interpretability community, through discussions and collaborations, has allowed me to contribute to the collective knowledge base and further refine my own understanding, solidifying my position as a contributing member of the field.
+        </p>
+        <p class="mb-4 text-15px">
+            This four-phase journey—from practitioner to theorist, from observation to control, and from theory to impact—has equipped me with a unique blend of practical, causal, and foundational expertise. I am prepared not only to understand how today's models work, but to help build the frameworks that will ensure tomorrow's models are transparent, safe, and aligned with human values.
+        </p>
+    </div>
+</body>
+</html>
